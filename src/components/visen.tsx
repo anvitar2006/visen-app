@@ -21,6 +21,45 @@ import {
   type View,
 } from "@/components/navigation";
 import SanaMark from "@/components/sana-mark";
+import PageHeading from "@/components/ui/page-heading";
+const headings = {
+  Today: {
+    eyebrow: "TUESDAY, OCTOBER 20 · SAMPLE DAY",
+    title: "Good morning, Alex.",
+    description: "",
+    action: "Add a task",
+  },
+  Week: {
+    eyebrow: "YOUR WEEK, WITH INTENTION",
+    title: "A week with room to breathe.",
+    description: "The plans that matter, with space for life in between.",
+    action: "Add a plan",
+  },
+  "My Vision": {
+    eyebrow: "THE BIGGER PICTURE",
+    title: "Become who you envision.",
+    description:
+      "Let the life you want to create bring meaning to the everyday.",
+    action: "New goal",
+  },
+  Habits: {
+    eyebrow: "THE THINGS YOU COME BACK TO",
+    title: "Small rituals. A steadier rhythm.",
+    description:
+      "Simple things that help you feel a little more like yourself.",
+    action: "New habit",
+  },
+  Sana: {
+    eyebrow: "THOUGHTFUL GUIDANCE, YOUR DECISIONS",
+    title: "A little clarity, with Sana.",
+    description:
+      "A quiet place to sort through your plans and find a little perspective.",
+    action: null,
+  },
+} satisfies Record<
+  View,
+  { eyebrow: string; title: string; description: string; action: string | null }
+>;
 export default function Visen() {
   const [view, setView] = useState<View>("Today");
   const [dark, setDark] = useState<boolean | null>(null);
@@ -215,72 +254,27 @@ export default function Visen() {
           </div>
         </header>
         <div className="page-content">
-          <div className="page-heading">
-            <div>
-              <p className="eyebrow">
-                {view === "Today"
-                  ? "TUESDAY, OCTOBER 20 · SAMPLE DAY"
-                  : view === "Week"
-                    ? "OCTOBER 19 – 25, 2026"
-                    : view === "My Vision"
-                      ? "THE BIGGER PICTURE"
-                      : view === "Habits"
-                        ? "THE THINGS YOU COME BACK TO"
-                        : "YOUR AI PLANNING ASSISTANT"}
-              </p>
-              <h1>
-                {view === "Today" ? (
-                  <>
-                    A little more <em>intention.</em>
-                  </>
-                ) : view === "Week" ? (
-                  <>
-                    Make room for <em>what matters.</em>
-                  </>
-                ) : view === "My Vision" ? (
-                  <>
-                    The life you <em>envision.</em>
-                  </>
-                ) : view === "Habits" ? (
-                  <>
-                    Small rituals. <em>Lasting change.</em>
-                  </>
-                ) : (
-                  <>
-                    A little perspective, <em>with Sana.</em>
-                  </>
-                )}
-              </h1>
-              <p className="heading-description">
-                {view === "Today"
-                  ? "Good morning, Alex. There’s space for progress and a little breathing room."
-                  : view === "Week"
-                    ? "A thoughtful rhythm for your week. Not every hour needs a plan."
-                    : view === "My Vision"
-                      ? "Let the bigger picture bring a little meaning to the everyday."
-                      : view === "Habits"
-                        ? "Build a rhythm that supports you. You can always begin again."
-                        : "A thoughtful space to sort through what’s on your mind."}
-              </p>
-            </div>
-            {view !== "Sana" && (
-              <button className="outline-button heading-action" onClick={demo}>
-                <Plus size={16} />
-                {view === "Today"
-                  ? "Add a task"
-                  : view === "Week"
-                    ? "Add to week"
-                    : view === "My Vision"
-                      ? "New goal"
-                      : "New habit"}
-              </button>
-            )}
-          </div>
+          <PageHeading
+            eyebrow={headings[view].eyebrow}
+            title={headings[view].title}
+            description={headings[view].description}
+            action={
+              headings[view].action ? (
+                <button
+                  className="outline-button heading-action"
+                  onClick={demo}
+                >
+                  <Plus size={16} />
+                  {headings[view].action}
+                </button>
+              ) : undefined
+            }
+          />
           {notice && (
             <div className="notice" role="status">
               <span>
-                This is the visual preview. Planning changes arrive in Phase 3;
-                Sana’s guided suggestions arrive in Phase 4. No data has been
+                This is a read-only design preview. Planning changes and
+                personalized guidance are not available yet. No data has been
                 changed.
               </span>
               <button

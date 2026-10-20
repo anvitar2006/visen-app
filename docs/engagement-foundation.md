@@ -6,7 +6,7 @@ This addition prepares data contracts and reusable presentation. It does not imp
 
 `src/domain/planning.ts` defines goals, milestones, tasks, habits, and completion events independently of React, storage, and AI providers. Records have stable IDs and creation/update timestamps. Tasks can reference goals and milestones. Milestones belong to goals and have explicit ordering. Habits use flexible weekly targets or chosen weekdays and can pause. Task planning dates and deadlines are separate.
 
-The typed fixture records in `sample-planning.ts` feed the current visual adapters in `sample.ts`. Display labels, colors, and illustrative progress snapshots remain outside the domain contracts. Goal totals, habit-day snapshots, and Today’s progress are still sample presentation, not implemented user-facing aggregation. The calendar's additional agenda entries remain display fixtures; a complete task/commitment scheduling model belongs to Phase 3.
+The typed fixture records in `sample-planning.ts` feed the current visual adapters in `sample.ts`. Display labels, colors, and illustrative progress snapshots remain outside the domain contracts. Goal totals, habit-day snapshots, and Today’s progress are still sample presentation, not implemented user-facing aggregation. All four planning previews now derive from the same task and commitment fixture records, including status, category, priority, planned dates, scheduled start times, and milestone links. The original title-keyed weekly agenda copies were removed. Full task/commitment writes and scheduling logic still belong to Phase 3.
 
 A completion has its own ID, a typed subject reference, occurrence timestamp, intended local date, and IANA time zone. Undoing a completion can reference the original completion ID without erasing the fact that it happened. One sample task demonstrates completion and retraction. This is a contract and a read-only example, not an event bus, analytics pipeline, points ledger, or event-sourced application.
 
@@ -37,3 +37,7 @@ No feature registry, plugin system, background jobs, services, new dependencies,
 ## Verification
 
 The fixture test checks unique IDs, goal/milestone links, valid dated event references, retraction integrity, unique habit-day occurrences, and consistency with the current visible sample status. The existing browser suite checks both themes, all current views, iPad/mobile layouts, preview behavior, and accessibility. None of these tests claim that the deferred features work.
+
+## Approved Phase 2 refinement
+
+The founder authorized read-only List, Calendar, Board, and Timeline presentations, plus visual refinements. These use the same task/commitment records and do not add editing, persistence, or future engagement functionality. Sana remains a clearly labeled scripted preview. Future onboarding must ask one question at a time, adapt only to voluntarily supplied context, and obtain explicit approval before saving a profile or changing plans. No current screen claims these capabilities are available.

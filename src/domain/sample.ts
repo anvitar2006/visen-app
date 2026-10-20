@@ -1,50 +1,130 @@
+import type { Category, Commitment, Task } from "./planning";
 import {
   sampleTasks,
   sampleGoals,
   sampleMilestones,
   sampleHabits,
+  sampleCommitments,
+  sampleToday,
+  sampleTimeZone,
 } from "./sample-planning";
-// Read-only display adapters. Snapshot progress is illustrative, not a production calculation.
-const taskDisplay = {
-  "task-portfolio": {
-    detail: "Career & purpose · 45 min",
-    category: "Career",
-    color: "rose",
-  },
-  "task-pilates": {
-    detail: "11:00 AM · 50 min",
-    category: "Wellbeing",
-    color: "sage",
-  },
-  "task-reading": {
-    detail: "Personal growth · 20 min",
-    category: "Personal",
-    color: "sand",
-  },
-};
+export const categories: readonly Category[] = [
+  { id: "career", name: "Work & focus", tone: "blue" },
+  { id: "wellbeing", name: "Wellbeing", tone: "sage" },
+  { id: "personal", name: "Personal", tone: "taupe" },
+  { id: "reflection", name: "Reflection", tone: "lavender" },
+  { id: "creativity", name: "Creativity", tone: "lavender" },
+  { id: "connection", name: "Connection", tone: "taupe" },
+];
+export function categoryFor(id: string) {
+  return categories.find((c) => c.id === id)!;
+}
+export const tasks: readonly Task[] = sampleTasks;
+export const commitments: readonly Commitment[] = sampleCommitments;
+export const todayTasks = tasks.filter(
+  (task) => task.plannedDate === sampleToday,
+);
+export const todayPriorities = todayTasks.slice(0, 3);
+export const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+  (name, i) => ({
+    name,
+    date: 19 + i,
+    isoDate: `2026-10-${19 + i}`,
+    note: i === 3 ? "A fuller day" : i === 1 ? "Room to breathe" : "",
+  }),
+);
+export function timeLabel(instant: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: sampleTimeZone,
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(instant));
+}
+export function dateLabel(
+  date: string,
+  options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" },
+) {
+  return new Intl.DateTimeFormat("en-US", {
+    ...options,
+    timeZone: "UTC",
+  }).format(new Date(`${date}T12:00:00Z`));
+}
+export const todayCommitments = commitments.filter(
+  (c) =>
+    new Intl.DateTimeFormat("en-CA", { timeZone: c.timeZone }).format(
+      new Date(c.startAt),
+    ) === sampleToday,
+);
+/** Read-only projections of the SAME records, not independent task stores. */
+export const planningItems = [
+  ...tasks.map((task) => ({
+    id: task.id,
+    kind: "task" as const,
+    title: task.title,
+    date: task.plannedDate!,
+    category: categoryFor(task.categoryId),
+    status: task.status,
+    priority: task.priority,
+    start: task.scheduledStart,
+    detail: task.scheduledStart
+      ? `${timeLabel(task.scheduledStart)} · ${task.estimatedMinutes} min`
+      : `${task.estimatedMinutes} min · Flexible`,
+    record: task,
+  })),
+  ...commitments.map((commitment) => ({
+    id: commitment.id,
+    kind: "commitment" as const,
+    title: commitment.title,
+    date: new Intl.DateTimeFormat("en-CA", {
+      timeZone: commitment.timeZone,
+    }).format(new Date(commitment.startAt)),
+    category: categoryFor(commitment.categoryId),
+    status: "scheduled" as const,
+    priority: "normal" as const,
+    start: commitment.startAt,
+    detail: timeLabel(commitment.startAt),
+    record: commitment,
+  })),
+];
+export type PlanningItem = (typeof planningItems)[number];
+// The fictional day is viewed at 10 AM. This is a fixed preview, not live scheduling.
+export const todayUpcomingItems = planningItems
+  .filter(
+    (item) =>
+      item.date === sampleToday &&
+      item.start &&
+      item.start > "2026-10-20T14:00:00.000Z",
+  )
+  .sort((a, b) => a.start!.localeCompare(b.start!));
 const goalDisplay = {
   "goal-career": {
     category: "CAREER & PURPOSE",
     progress: 42,
     steps: "3 of 7 milestones",
-    color: "rose",
     nextMilestoneId: "milestone-1-4",
   },
   "goal-wellbeing": {
     category: "MIND & BODY",
     progress: 60,
     steps: "3 of 5 milestones",
-    color: "sage",
     nextMilestoneId: "milestone-2-4",
   },
   "goal-curiosity": {
     category: "PERSONAL GROWTH",
     progress: 25,
     steps: "1 of 4 milestones",
-    color: "sand",
     nextMilestoneId: "milestone-3-2",
   },
 };
+export const goals = sampleGoals.map((goal) => ({
+  ...goal,
+  ...goalDisplay[goal.id],
+  color: categoryFor(goal.categoryId).tone,
+  detail: goal.description,
+  milestone: sampleMilestones.find(
+    (m) => m.id === goalDisplay[goal.id].nextMilestoneId,
+  )!.title,
+}));
 const habitDisplay = {
   "habit-movement": {
     detail: "3 times a week",
@@ -62,165 +142,14 @@ const habitDisplay = {
     count: "1 of 7",
   },
 };
-export const tasks = sampleTasks.map((task) => ({
-  ...task,
-  ...taskDisplay[task.id],
-  done: task.status === "completed",
-}));
-export const goals = sampleGoals.map((goal) => ({
-  ...goal,
-  ...goalDisplay[goal.id],
-  detail: goal.description,
-  milestone: sampleMilestones.find(
-    (m) => m.id === goalDisplay[goal.id].nextMilestoneId,
-  )!.title,
-}));
 export const habits = sampleHabits.map((habit) => ({
   ...habit,
   ...habitDisplay[habit.id],
+  color: categoryFor(habit.categoryId).tone,
 }));
-// Tuesday is the fixed sample day; this is a display snapshot, not a scheduling engine.
 export const todayHabits = habits.map((habit) => ({
   id: habit.id,
   name: habit.name,
+  color: habit.color,
   done: habit.days[1],
 }));
-export const days = [
-  {
-    name: "Mon",
-    date: 19,
-    items: ["Weekly reset", "Portfolio research"],
-    load: "A gentle start",
-  },
-  {
-    name: "Tue",
-    date: 20,
-    items: ["Refine portfolio", "Pilates at the studio", "Coffee with Maya"],
-    load: "Room to breathe",
-  },
-  {
-    name: "Wed",
-    date: 21,
-    items: ["Project workshop", "Grocery run"],
-    load: "A balanced day",
-  },
-  {
-    name: "Thu",
-    date: 22,
-    items: [
-      "Design presentation",
-      "Lunch with Alex",
-      "Evening class",
-      "Application review",
-    ],
-    load: "A fuller day",
-  },
-  {
-    name: "Fri",
-    date: 23,
-    items: ["Finish case study", "Dinner with friends"],
-    load: "Finish with intention",
-  },
-  {
-    name: "Sat",
-    date: 24,
-    items: ["Farmers market", "A long walk"],
-    load: "Time for yourself",
-  },
-  {
-    name: "Sun",
-    date: 25,
-    items: ["Slow morning", "Plan the week ahead"],
-    load: "Rest & reset",
-  },
-];
-export const weekItemDetails: Record<
-  string,
-  { category: string; color: "rose" | "sage" | "sand"; detail: string }
-> = {
-  "Weekly reset": {
-    category: "Personal",
-    color: "sand",
-    detail: "20 min · Flexible",
-  },
-  "Portfolio research": {
-    category: "Career",
-    color: "rose",
-    detail: "45 min · Flexible",
-  },
-  "Refine portfolio": {
-    category: "Career",
-    color: "rose",
-    detail: "45 min · Flexible",
-  },
-  "Pilates at the studio": {
-    category: "Wellbeing",
-    color: "sage",
-    detail: "11:00 AM · 50 min",
-  },
-  "Coffee with Maya": {
-    category: "Connection",
-    color: "sand",
-    detail: "3:30 PM · Corner café",
-  },
-  "Project workshop": {
-    category: "Career",
-    color: "rose",
-    detail: "10:00 AM · 60 min",
-  },
-  "Grocery run": {
-    category: "Personal",
-    color: "sand",
-    detail: "30 min · Flexible",
-  },
-  "Design presentation": {
-    category: "Career",
-    color: "rose",
-    detail: "9:00 AM · 60 min",
-  },
-  "Lunch with Alex": {
-    category: "Connection",
-    color: "sand",
-    detail: "12:30 PM · 60 min",
-  },
-  "Evening class": {
-    category: "Learning",
-    color: "sage",
-    detail: "6:00 PM · 90 min",
-  },
-  "Application review": {
-    category: "Career",
-    color: "rose",
-    detail: "45 min · Flexible",
-  },
-  "Finish case study": {
-    category: "Career",
-    color: "rose",
-    detail: "60 min · Flexible",
-  },
-  "Dinner with friends": {
-    category: "Connection",
-    color: "sand",
-    detail: "7:00 PM · An open evening",
-  },
-  "Farmers market": {
-    category: "Personal",
-    color: "sand",
-    detail: "A slow Saturday morning",
-  },
-  "A long walk": {
-    category: "Wellbeing",
-    color: "sage",
-    detail: "40 min · Outdoors",
-  },
-  "Slow morning": {
-    category: "Wellbeing",
-    color: "sage",
-    detail: "Leave a little room",
-  },
-  "Plan the week ahead": {
-    category: "Personal",
-    color: "sand",
-    detail: "20 min · Flexible",
-  },
-};

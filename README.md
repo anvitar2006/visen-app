@@ -6,7 +6,7 @@ Phase 2 visual foundation for an intentional planning application. Built with Ne
 
 ## Scope
 
-Today, Week, My Vision, Habits, and Sana are responsive sample-data interfaces, not a functioning personal planning system. Navigation, weekday selection on compact layouts, theme switching, and the explicitly labeled conversation preview work. Planning controls explain the milestone boundary rather than pretending to save changes.
+Today, Week, My Vision, Habits, and Sana are responsive sample-data interfaces, not a functioning personal planning system. Navigation, four planning-view previews, list grouping, compact calendar/board selection, Today disclosures, theme switching, and the explicitly labeled scripted conversation preview work. Planning controls explain the milestone boundary rather than pretending to save changes.
 
 Only the appearance preference is persisted in browser local storage. Sana preview messages live in component memory and reset when leaving the Sana view or reloading. No AI calls, accounts, external database, analytics integration, or deployment are configured.
 
@@ -52,7 +52,7 @@ A server running here is for internal validation. No externally accessible previ
 
 ## Assets
 
-Fonts are bundled locally through Fontsource and carry their included open font licenses. Icons use Lucide's ISC license. The locally bundled landscape photograph was obtained from the MIT-licensed Next.js example repository; see [asset provenance](docs/assets.md). There are no runtime requests to image or font providers.
+Fonts are bundled locally through Fontsource and carry their included open font licenses. Icons use Lucide's ISC license. The locally bundled lifestyle photograph is distributed by the MIT-licensed Start Bootstrap Clean Blog repository; see [asset provenance](docs/assets.md). There are no runtime requests to image or font providers.
 
 Phase 3 requires the founder's design approval. It will add planning behavior, storage validation, and runtime validation of the planning contracts. Phase 4 will add guided onboarding and rule-based Sana suggestions. Genuine AI requires a separate approval milestone.
 

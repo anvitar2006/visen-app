@@ -19,12 +19,15 @@ export interface Milestone extends PlanningRecord {
   readonly goalId: EntityId;
   readonly title: string;
   readonly position: number;
+  readonly targetDate?: LocalDate;
   readonly status: "open" | "completed";
 }
 export interface Task extends PlanningRecord {
   readonly title: string;
   readonly categoryId: string;
-  readonly status: "open" | "completed";
+  readonly status: "open" | "in-progress" | "completed";
+  readonly priority: "high" | "normal" | "low";
+  readonly scheduledStart?: Timestamp;
   readonly plannedDate?: LocalDate;
   readonly dueDate?: LocalDate;
   readonly estimatedMinutes?: number;
@@ -59,3 +62,16 @@ export type CompletionEvent = {
   | { readonly kind: "completed" }
   | { readonly kind: "retracted"; readonly completionEventId: EntityId }
 );
+
+export interface Commitment extends PlanningRecord {
+  readonly title: string;
+  readonly categoryId: string;
+  readonly startAt: Timestamp;
+  readonly endAt: Timestamp;
+  readonly timeZone: string;
+}
+export interface Category {
+  readonly id: string;
+  readonly name: string;
+  readonly tone: "sage" | "blue" | "lavender" | "taupe" | "rose";
+}

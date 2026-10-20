@@ -1,51 +1,44 @@
 "use client";
-
-import { BookOpen, Leaf, Plus, Sun } from "lucide-react";
-
+import { BookOpen, Leaf, Sun } from "lucide-react";
 import PreviewCompletion from "@/components/ui/preview-completion";
 import { days, habits } from "@/domain/sample";
 export default function HabitsView({ demo }: { demo: () => void }) {
   return (
     <>
-      <section className="habits-intro">
+      <section className="habit-introduction">
+        <div className="habit-intro-mark">
+          <Leaf size={26} strokeWidth={1} />
+        </div>
         <div>
-          <span className="eyebrow">CONSISTENCY, WITH KINDNESS</span>
-          <h2>
-            A rhythm, <em>not a race.</em>
-          </h2>
+          <p className="eyebrow">CONSISTENCY, WITH KINDNESS</p>
+          <h2>A rhythm you can return to.</h2>
           <p>
-            Some weeks will look different. What matters is coming back to what
-            feels good.
+            Some days will look different. There’s no perfect streak to protect.
           </p>
         </div>
-        <div className="habit-stat">
-          <strong>4</strong>
-          <span>
-            small moments
-            <br />
-            for yourself this week
-          </span>
-        </div>
+        <span className="habit-week-label">
+          THIS WEEK
+          <br />
+          <strong>October 19 — 25</strong>
+        </span>
       </section>
       <div className="habit-table">
         <div className="habit-table-head">
           <span>YOUR RITUALS</span>
           <div className="habit-days">
-            {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
-              <span key={i}>
-                {d}
-                <small>{19 + i}</small>
+            {days.map((d) => (
+              <span key={d.name}>
+                {d.name[0]}
+                <small>{d.date}</small>
               </span>
             ))}
           </div>
           <span>THIS WEEK</span>
         </div>
-        {habits.map((h, i) => (
-          <div className="habit-table-row" key={h.id}>
+        {habits.map((habit, i) => (
+          <div className="habit-table-row" key={habit.id}>
             <div className="habit-name">
-              <span
-                className={`habit-icon ${i === 0 ? "sage" : i === 1 ? "sand" : "rose"}`}
-              >
+              <span className={`habit-icon tone-${habit.color}`}>
                 {i === 0 ? (
                   <Leaf size={22} />
                 ) : i === 1 ? (
@@ -55,18 +48,18 @@ export default function HabitsView({ demo }: { demo: () => void }) {
                 )}
               </span>
               <div>
-                <h3>{h.name}</h3>
-                <p>{h.detail}</p>
+                <h3>{habit.name}</h3>
+                <p>{habit.detail}</p>
               </div>
             </div>
             <div className="habit-days">
-              {h.days.map((done, j) => (
+              {habit.days.map((done, j) => (
                 <PreviewCompletion
                   key={j}
                   variant="day"
                   completed={done}
                   onPreview={demo}
-                  label={`${h.name}, ${days[j].name}, ${done ? "completed" : "not completed"} in sample`}
+                  label={`${habit.name}, ${days[j].name}, ${done ? "completed" : "not completed"} in sample`}
                 >
                   <b className="habit-day-label" aria-hidden="true">
                     {days[j].name[0]}
@@ -75,23 +68,24 @@ export default function HabitsView({ demo }: { demo: () => void }) {
               ))}
             </div>
             <span className="habit-total">
-              {h.count}
+              {habit.count}
               <small>moments</small>
             </span>
           </div>
         ))}
       </div>
-      <div className="week-bottom">
-        <div>
-          <h2>Make it your own.</h2>
-          <p className="subtle">
-            A five-minute walk counts. So does starting again.
-          </p>
-        </div>
-        <button className="outline-button" onClick={demo}>
-          <Plus size={16} />
-          New habit
-        </button>
+      <div className="habit-kindness">
+        <span className="eyebrow">A GENTLE REMINDER</span>
+        <p>
+          A five-minute walk counts.
+          <br />
+          So does starting again.
+        </p>
+        <span>
+          Keep what supports you.
+          <br />
+          Let the rest be flexible.
+        </span>
       </div>
     </>
   );

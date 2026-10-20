@@ -1,11 +1,24 @@
 "use client";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  ChevronDown,
+  Flag,
+  Plus,
+} from "lucide-react";
 import type { View } from "@/components/navigation";
-
-import { ArrowRight, ArrowUpRight, Leaf, Plus } from "lucide-react";
-import SectionHeader from "@/components/ui/section-header";
-import PreviewCompletion from "@/components/ui/preview-completion";
 import SanaMark from "@/components/sana-mark";
-import { tasks, todayHabits } from "@/domain/sample";
+import PreviewCompletion from "@/components/ui/preview-completion";
+import SectionHeader from "@/components/ui/section-header";
+import {
+  categoryFor,
+  todayTasks,
+  todayPriorities,
+  todayUpcomingItems,
+  todayHabits,
+  timeLabel,
+} from "@/domain/sample";
 export default function TodayView({
   demo,
   navigate,
@@ -15,158 +28,170 @@ export default function TodayView({
 }) {
   return (
     <>
-      <section className="hero" aria-label="Daily intention">
-        <div className="hero-copy">
-          <span className="eyebrow">YOUR DAY, WITH PURPOSE</span>
-          <h2>
-            You don’t have to do it all.
-            <br />
-            <em>Just what matters.</em>
-          </h2>
-          <p>
-            A few meaningful steps today can take you
-            <br className="desktop-break" /> closer to the life you’re creating.
-          </p>
-          <button className="text-link" onClick={() => navigate("My Vision")}>
-            Reconnect with your vision <ArrowUpRight size={16} />
-          </button>
-        </div>
-        <div
-          className="hero-photo"
-          role="img"
-          aria-label="Snow-covered mountains under a quiet evening sky"
-        >
-          <div className="photo-caption">MAKE SPACE TO GROW.</div>
-        </div>
+      <section className="today-intention" aria-label="Daily intention">
+        <span className="eyebrow">A LITTLE INTENTION</span>
+        <p>A little focus. A little room for yourself.</p>
       </section>
-      <div className="today-grid">
-        <div className="today-primary">
-          <section className="priorities">
-            <SectionHeader
-              eyebrow="FOCUS ON WHAT COUNTS"
-              title={
-                <>
-                  Today’s priorities <span className="count">03</span>
-                </>
-              }
-              accessory={<span className="subtle">One thing at a time.</span>}
-            />
-            <div className="task-list">
-              {tasks.map((task, i) => (
+      <div className="today-layout">
+        <div className="today-focus">
+          <SectionHeader
+            title="Three things, thoughtfully chosen."
+            eyebrow="YOUR PRIORITIES"
+            accessory={<span className="quiet-label">01 / 03 complete</span>}
+          />
+          <div className="priorities-list">
+            {todayPriorities.map((task, i) => {
+              const category = categoryFor(task.categoryId);
+              return (
                 <div
-                  className={`task-row ${task.done ? "completed" : ""}`}
                   key={task.id}
+                  className={`priority-row ${task.status === "completed" ? "is-complete" : ""}`}
                 >
+                  <span className="priority-index">0{i + 1}</span>
                   <PreviewCompletion
-                    completed={task.done}
-                    label={`${task.done ? "Completed" : "Preview completion for"} ${task.title}`}
+                    completed={task.status === "completed"}
+                    label={`${task.status === "completed" ? "Completed" : "Preview completion for"} ${task.title}`}
                     onPreview={demo}
                   />
-                  <div className="task-text">
+                  <div className="priority-copy">
                     <h3>{task.title}</h3>
-                    <span>{task.detail}</span>
+                    <div>
+                      <span className={`category-label tone-${category.tone}`}>
+                        <span className="category-dot" />
+                        {category.name}
+                      </span>
+                      <span className="detail-dot">·</span>
+                      <span>{task.estimatedMinutes} min</span>
+                      {task.priority === "high" && (
+                        <span className="priority-label">
+                          <Flag size={12} />
+                          High priority
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <span className={`category ${task.color}`}>
-                    {task.category}
-                  </span>
-                  <span className="task-number">0{i + 1}</span>
+                  {task.status === "in-progress" && (
+                    <span className="status-text">In progress</span>
+                  )}
                 </div>
+              );
+            })}
+          </div>
+          <button className="quiet-add" onClick={demo}>
+            <Plus size={16} />
+            Add a little intention
+          </button>
+          <details className="today-task-details">
+            <summary>
+              <span>
+                All of today’s tasks{" "}
+                <small>
+                  {todayTasks.length} plans, including your priorities
+                </small>
+              </span>
+              <ChevronDown size={17} />
+            </summary>
+            <div>
+              {todayTasks.map((task) => (
+                <button key={task.id} onClick={demo}>
+                  <span>
+                    {task.status === "completed" ? (
+                      <Check size={15} />
+                    ) : (
+                      <span className="small-open-circle" />
+                    )}
+                  </span>
+                  <strong>{task.title}</strong>
+                  <span>{task.estimatedMinutes} min</span>
+                </button>
               ))}
             </div>
-            <button className="quiet-add" onClick={demo}>
-              <Plus size={16} /> Make a little space for something else
-            </button>
-          </section>
-          <section className="commitments">
-            <SectionHeader
-              title="On the horizon"
-              accessory={
-                <button className="text-link" onClick={() => navigate("Week")}>
-                  View week <ArrowRight size={15} />
-                </button>
-              }
-            />
-            <div className="appointment">
-              <span className="time">
-                11:00<span>AM</span>
-              </span>
-              <span className="appointment-line sage-bg" />
-              <div>
-                <h3>Pilates at the studio</h3>
-                <p>50 min · Time for yourself</p>
-              </div>
-              <span className="appointment-label">WELLBEING</span>
-            </div>
-            <div className="appointment">
-              <span className="time">
-                3:30<span>PM</span>
-              </span>
-              <span className="appointment-line rose-bg" />
-              <div>
-                <h3>Coffee with Maya</h3>
-                <p>Corner café · A little catching up</p>
-              </div>
-              <span className="appointment-label">CONNECTION</span>
-            </div>
-          </section>
+          </details>
         </div>
         <aside
-          className="today-secondary"
-          aria-label="Daily reflection and habits"
+          className="today-guidance"
+          aria-label="Sana guidance and upcoming commitments"
         >
-          <section className="sana-card">
-            <div className="sana-card-head">
+          <section className="sana-note">
+            <div className="sana-note-heading">
               <SanaMark />
               <div>
-                <h3>A note from Sana</h3>
-                <span>YOUR PLANNING COMPANION</span>
+                <h2>A little perspective</h2>
+                <span>FROM SANA · SAMPLE NOTE</span>
               </div>
             </div>
             <p>
-              “Your portfolio is a step toward something you care about. Give it
-              your best energy today. The rest can find its place.”
+              Your portfolio deserves a little focus this morning. After that,
+              let the day have some breathing room.
             </p>
-            <div className="sana-card-footer">
-              <span>Sample suggestion</span>
-              <button aria-label="Open Sana" onClick={() => navigate("Sana")}>
-                <ArrowUpRight size={20} />
-              </button>
-            </div>
+            <button className="text-link" onClick={() => navigate("Sana")}>
+              Make room to think <ArrowUpRight size={16} />
+            </button>
           </section>
-          <section className="daily-rhythm">
+          <section className="upcoming">
             <SectionHeader
-              title="Your daily rhythm"
-              accessory={<Leaf size={17} />}
+              title="A few things ahead"
+              accessory={
+                <button className="text-link" onClick={() => navigate("Week")}>
+                  Your week
+                  <ArrowRight size={15} />
+                </button>
+              }
             />
-            <p className="subtle">Little things that make a difference.</p>
-            {todayHabits.map((h) => (
-              <div className="mini-habit" key={h.id}>
-                <span>{h.name}</span>
-                <PreviewCompletion
-                  completed={h.done}
-                  label={`${h.name}: ${h.done ? "sample complete" : "sample incomplete"}`}
-                  onPreview={demo}
-                />
+            {todayUpcomingItems.map((item) => (
+              <div className="today-appointment" key={item.id}>
+                <time>
+                  {timeLabel(item.start!).replace(/ (AM|PM)/, "")}{" "}
+                  <span>
+                    {timeLabel(item.start!).endsWith("AM") ? "AM" : "PM"}
+                  </span>
+                </time>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>
+                    <span
+                      className={`category-label tone-${item.category.tone}`}
+                    >
+                      <span className="category-dot" />
+                      {item.category.name}
+                    </span>{" "}
+                    ·{" "}
+                    {item.kind === "commitment"
+                      ? "Commitment"
+                      : `${item.record.estimatedMinutes} min`}
+                  </p>
+                </div>
               </div>
             ))}
           </section>
-          <div className="progress-summary">
-            <div className="progress-ring">
-              <span>
-                1<span>/ 3</span>
-              </span>
-            </div>
-            <div>
-              <h3>A little progress</h3>
-              <p>
-                One priority complete.
-                <br />
-                You’re finding your rhythm.
-              </p>
-            </div>
-          </div>
         </aside>
       </div>
+      <details className="rituals-disclosure">
+        <summary>
+          <span>
+            <span className="eyebrow">SUPPORTING YOUR DAY</span>
+            <strong>Your small rituals</strong>
+            <small>Movement, a few pages, a moment to pause.</small>
+          </span>
+          <span className="disclosure-action">
+            Take a look
+            <ChevronDown size={17} />
+          </span>
+        </summary>
+        <div className="today-rituals">
+          {todayHabits.map((h) => (
+            <div key={h.id}>
+              <span className={`category-dot tone-${h.color}`} />
+              <span>{h.name}</span>
+              <PreviewCompletion
+                completed={h.done}
+                label={`${h.name}: ${h.done ? "sample complete" : "sample incomplete"}`}
+                onPreview={demo}
+              />
+            </div>
+          ))}
+        </div>
+      </details>
     </>
   );
 }

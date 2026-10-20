@@ -7,11 +7,13 @@ import {
   sampleHabits,
   sampleCompletionEvents,
   sampleToday,
+  sampleCommitments,
 } from "../src/domain/sample-planning";
 import { tasks, goals, habits } from "../src/domain/sample";
 
 test("fictional planning records preserve identity, links, and reversible completion history", () => {
   const records = [
+    ...sampleCommitments,
     ...sampleGoals,
     ...sampleMilestones,
     ...sampleTasks,
@@ -40,6 +42,16 @@ test("fictional planning records preserve identity, links, and reversible comple
       expect(
         habit.frequency.weekdays.every((day) => day >= 1 && day <= 7),
       ).toBe(true);
+  }
+  for (const commitment of sampleCommitments) {
+    expect(Date.parse(commitment.endAt)).toBeGreaterThan(
+      Date.parse(commitment.startAt),
+    );
+    expect(
+      new Intl.DateTimeFormat("en-CA", {
+        timeZone: commitment.timeZone,
+      }).format(new Date(commitment.startAt)),
+    ).toMatch(/^2026-10-2[0-5]$/);
   }
   const subjectIds = {
     goal: new Set<string>(sampleGoals.map((g) => g.id)),
@@ -94,11 +106,13 @@ test("fictional planning records preserve identity, links, and reversible comple
         ),
       ).toBe(habit.days[day]);
     }
-  expect(tasks.filter((t) => t.done)).toHaveLength(1);
+  expect(tasks.filter((t) => t.status === "completed")).toHaveLength(1);
   expect(goals.map((g) => g.milestone)).toEqual([
     "Finish my portfolio",
     "Find a routine I enjoy",
     "Read twelve books this year",
   ]);
-  expect(sampleTasks.every((t) => t.plannedDate === sampleToday)).toBe(true);
+  expect(sampleTasks.filter((t) => t.plannedDate === sampleToday)).toHaveLength(
+    4,
+  );
 });

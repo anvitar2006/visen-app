@@ -16,3 +16,5 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Use the existing checkout and a development branch. Do not merge substantial changes into main without approval.
 - Keep both themes and iPad portrait/landscape layouts polished. Use `npm run build`, `npm run typecheck`, and `npm test` for review; see README for browser setup.
 - Engagement/retention foundations are limited to typed records, fictional history, shared presentation, and documented future boundaries. See `docs/engagement-foundation.md`; no rewards, sharing, referrals, reflection engine, or live Sana intelligence is authorized yet.
+
+- The founder additionally approved the comprehensive Phase 2 design refinement and pushing `design/phase-2`. Read-only List/Calendar/Board/Timeline previews are authorized. Editing, drag-and-drop, scheduling writes, preferred-view persistence, onboarding, deployment, and Codespace creation still require the relevant separate approval.

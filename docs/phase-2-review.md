@@ -1,61 +1,76 @@
-# Phase 2 — Visual foundation
+# Visen — Phase 2 design review
 
-Branch: `design/phase-2`. No public deployment or main-branch merge.
+Branch: `design/phase-2`. This is a running, read-only sample-data application. The branch is published for review; main is unchanged. No app hosting, Codespace, paid service, account system, database, or AI integration has been created.
 
-## Design decisions
+## The refined experience
 
-The interface uses warm ivory, blush, espresso, and small sage/taupe accents. Large editorial serif headings sit above quieter sans-serif controls. Planning lists use whitespace and fine rules rather than nested dashboard cards. The landscape photograph is bundled locally; public-launch image selection remains open.
+- **Today:** a personal greeting, one short intention, three priorities, and an early Sana note. Supporting tasks and rituals use native disclosure controls. Upcoming plans come from the same records as the planner. The example day is October 20, 2026 at 10 AM.
+- **Week:** an editorial seven-day calendar with fine rules and labeled category markers. Timed commitments use a quiet outline; scheduled tasks are labeled time blocks. Narrower tablets/phones get a seven-day selector and a roomy day agenda.
+- **My Vision:** a personal letter alongside a natural notebook/plant photograph, followed by three open goal rows. Colored goal cards have been removed.
+- **Habits:** a spacious consistency table without a global productivity score or punitive streak language. The weekly table becomes labeled ritual rows on smaller devices.
+- **Sana:** an open S signature, editorial prompt rows, selected sample context, and an ephemeral note field. The screen explicitly labels its scripted preview. No chatbot bubbles, AI avatar, live inference, or onboarding flow.
 
-Sana has a three-oval identity, a muted green note surface on Today, and a calm conversation page. Prompts and the composer explicitly preview an interface; they do not generate suggestions or send text to a model.
+The Visen wordmark retains its original DM Serif Display typography, size, and letter spacing. Serif italics are reserved for the vision letter. Main titles use a 34–44px scale; section titles use roughly 24–29px; functional body text uses 14–16px. Small contextual labels have been enlarged; the most compact calendar metadata is 10–11px. Device-level Safari readability and VoiceOver still need a real iPad session.
 
-Landscape iPad layouts provide a sidebar and seven-column week. Portrait iPad layouts retain the sidebar but show a seven-day selector with a spacious selected-day agenda. Phone navigation is a focus-managed drawer, with Escape and focus restoration. Habits include weekday labels even when the table stacks.
+## Screenshots: running application
 
-Appearance follows the device on the first visit, then remembers an explicit light/dark selection. Both palettes are independently defined rather than filtered inversions.
+| Screen    | iPad landscape, light                                   | iPad portrait, light                             | Representative dark                                    |
+| --------- | ------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------ |
+| Today     | [Open](../artifacts/ipad-landscape-today-light.png)     | [Open](../artifacts/ipad-portrait-today.png)     | [Open](../artifacts/ipad-landscape-today-dark.png)     |
+| Week      | [Open](../artifacts/ipad-landscape-week-light.png)      | [Open](../artifacts/ipad-portrait-week.png)      | [Open](../artifacts/ipad-landscape-week-dark.png)      |
+| My Vision | [Open](../artifacts/ipad-landscape-my-vision-light.png) | [Open](../artifacts/ipad-portrait-my-vision.png) | [Open](../artifacts/ipad-landscape-my-vision-dark.png) |
+| Habits    | [Open](../artifacts/ipad-landscape-habits-light.png)    | [Open](../artifacts/ipad-portrait-habits.png)    | [Open](../artifacts/ipad-landscape-habits-dark.png)    |
+| Sana      | [Open](../artifacts/ipad-landscape-sana-light.png)      | [Open](../artifacts/ipad-portrait-sana.png)      | [Open](../artifacts/ipad-landscape-sana-dark.png)      |
 
-## Screenshots
+These are browser viewport captures, not physical iPad Safari screenshots. Mobile captures are also in `artifacts/`. Screenshots are review artifacts, not approved visual-regression baselines.
 
-These are captures of the running application, not design mockups.
+## Four views of one plan
 
-- [Today — landscape light](../artifacts/ipad-landscape-today-light.png)
-- [Today — landscape dark](../artifacts/ipad-landscape-today-dark.png)
-- [Today — portrait](../artifacts/ipad-portrait-today.png)
-- [Week — landscape](../artifacts/ipad-landscape-week-light.png)
-- [Week — portrait](../artifacts/ipad-portrait-week.png)
-- [My Vision](../artifacts/ipad-landscape-my-vision-light.png)
-- [Habits](../artifacts/ipad-landscape-habits-light.png)
-- [Habits — phone](../artifacts/mobile-habits.png)
-- [Sana — light](../artifacts/ipad-landscape-sana-light.png)
-- [Sana — dark](../artifacts/ipad-landscape-sana-dark.png)
+In **Week**, use the List / Calendar / Board / Timeline tabs. They support pointer, touch, Arrow Left/Right, Home, and End. All views derive from the same immutable task and commitment records. Switching is a local presentation choice; no records are copied into independent stores or persisted.
 
-The test suite also captures all five screens in both landscape themes, plus light portrait and phone layouts. Captures use reduced motion for stable output. They are review artifacts, not approved visual-regression baselines.
+| View     | What to try                                                                                                                                                                  | Landscape                                                       | Portrait                                                       |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------- |
+| List     | Group the same plans by day, category, priority, or status.                                                                                                                  | [Open](../artifacts/ipad-landscape-planning-list-light.png)     | [Open](../artifacts/ipad-portrait-planning-list-light.png)     |
+| Calendar | Compare flexible tasks and timed commitments. On compact screens select Thursday.                                                                                            | [Open](../artifacts/ipad-landscape-planning-calendar-light.png) | [Open](../artifacts/ipad-portrait-planning-calendar-light.png) |
+| Board    | Review To do / In progress / Completed. Wide-screen columns scroll independently; compact screens select one column at a time. Commitments remain a separate scheduled list. | [Open](../artifacts/ipad-landscape-planning-board-light.png)    | [Open](../artifacts/ipad-portrait-planning-board-light.png)    |
+| Timeline | Follow daily plans alongside linked milestone target dates.                                                                                                                  | [Open](../artifacts/ipad-landscape-planning-timeline-light.png) | [Open](../artifacts/ipad-portrait-planning-timeline-light.png) |
+
+These presentations are interactive previews, not editing workflows. Dragging, changing status, creating plans, scheduling writes, and saving view preference remain Phase 3 work. Calendar is a representative weekly layout; a full daily/monthly calendar is not implemented.
+
+## Color and cognitive simplicity
+
+Categories use muted sage (wellbeing), dusty blue (work/focus), lavender (creativity/reflection), and taupe (personal/connection). Dusty rose marks selected controls and priority flags. Each category also has a text label, and high priority has an explicit flag/label independent of category. These are editable-category foundations, not universal claims about color psychology. Custom categories/colors require Phase 3.
+
+Shared warm light/dark tokens define surfaces, text, dividers, focus, and semantic tones. Native details/summary elements progressively reveal supporting Today content. Both themes respect reduced motion and provide visible keyboard focus. Sidebar controls remain reachable on short tablets.
 
 ## Validation
 
-Run `npm run build`, `npm run typecheck`, and `npm test` after installation. The browser suite checks:
+Run `npm run build`, `npm run typecheck`, `npm run format:check`, and `npm test`.
 
-- All five views in light/dark at 1366 × 1024, including axe WCAG A/AA automated scans and horizontal overflow.
-- All views at 834 × 1194 and 390 × 1194.
-- Theme persistence, initial device dark preference, honest preview notices, and Sana's transparent preview response.
-- Mobile navigation focus trapping, Escape dismissal, focus restoration, and the open drawer's automated accessibility scan.
+The suite checks record identity and relationships, completion/retraction fixtures, all four planning projections, grouping, keyboard tabs, responsive calendar/board choices, disclosures, no-op planning controls, theme persistence, mobile drawer focus, and overflow. Axe scans cover all main views in both landscape themes plus all four planner modes in light/dark at landscape, portrait, and phone widths.
 
-Automated accessibility checks do not establish complete accessibility compliance. Real Safari, VoiceOver, and physical touch testing remain outstanding until interactive device review is available.
+Automated checks do not establish complete accessibility compliance. Real Safari/VoiceOver, physical touch comfort, and larger text settings remain device review items.
 
-## Simplest interactive iPad review
+## Private interactive review on an iPad — approval still required
 
-Proposed next step: a Vercel preview deployment connected to this development branch. Next.js is supported directly, and the resulting HTTPS URL can be opened in iPad Safari. This would use only sample data.
+The simplest proposed option is **GitHub Codespaces with a Private forwarded port**. It runs a development machine, without publishing a production website. No Codespace has been created.
 
-Before proceeding, obtain founder approval for publishing the branch, connecting the GitHub account/repository, and creating the hosted preview. Confirm current plan pricing and usage eligibility; a free plan must not be assumed suitable for a commercial project. Set preview access controls as supported by the chosen plan. No paid upgrade or public deployment is authorized by this document.
+After founder approval:
 
-No external account was connected and no preview was deployed during Phase 2. A cloud-local development address is not an iPad preview link.
+1. Check GitHub account allowance/billing settings. Use a personal-account 2-core codespace if available and suitable. Do not enable paid overage without approval.
+2. Open the repository in iPad Safari, choose `design/phase-2`, then **Code → Codespaces → Create codespace**.
+3. In the browser terminal run `nvm install`, `nvm use`, `npm ci`, `npm run build`, then `npm run start`.
+4. Open the **Ports** panel, forward port **3000**, verify its visibility is **Private**, then open its forwarded browser link while signed into the owning GitHub account. Do not choose Public or organization visibility.
+5. Stop the codespace after review to stop compute use. Delete it when no longer needed; retained storage can still count while stopped.
 
-## Review boundary
+GitHub hosts the source, development container, and authenticated preview traffic. Repository visibility is separate from forwarded-port privacy. Use fictional sample data; there is no production account/data isolation within the app.
 
-Working: navigation, light/dark preference, compact week day selection, keyboard drawer behavior, and an honest Sana conversation preview.
+GitHub's published pricing lists 2-core compute at **$0.18/hour** and storage at **$0.07/GB-month** after applicable included usage. Personal Free accounts list 120 included core-hours and 15 GB-month (about 60 running hours on two cores); Pro lists 180 core-hours and 20 GB-month. Remaining account allowance has not been inspected, and organization billing differs. Confirm the current account settings before creating anything.
 
-Visual only: task/commitment management, goal details, milestones, habit tracking, progress figures, and profile identity. Planning buttons display a clear notice and never mutate fixtures.
+Sources: [Codespaces pricing](https://docs.github.com/en/billing/concepts/product-billing/github-codespaces) and [port forwarding](https://docs.github.com/en/codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace).
 
-Await design approval before Phase 3. Do not add onboarding, live AI, authentication, production persistence, or deployment as part of this review.
+## Honest remaining limits
 
-## Engagement architecture addendum
+The fixture week does not establish real capacity or conflicts. Timeline milestone targets are illustrative. A longer or denser real schedule may need more progressive disclosure; that should be assessed with real-device review and, later, functional beta workflows. The new lifestyle photo fits the atmosphere better than the retired mountain image but remains stock photography, not commissioned brand imagery. Sana's custom S signature should receive founder review for distinctiveness at small sizes.
 
-[Engagement foundations](engagement-foundation.md) records the lightweight data contracts, fictional completion history, and extracted shared components added at the founder’s request. The five-view navigation and visual direction remain intact. The additional fixture-integrity test checks stable relationships, time-aware completions, and reversible history; future engagement features remain deferred.
+Conversation onboarding, editing, persistence, intelligent suggestions, Momentum, reflections, circles, referrals, and launch infrastructure remain unimplemented. [Engagement foundations](engagement-foundation.md) remain documentation and data contracts only. Stop for explicit design approval before Phase 3.

@@ -8,9 +8,9 @@ test("all views remain accessible in both themes on iPad landscape", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1366, height: 1024 });
-  await page.goto("/");
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/");
   for (const theme of ["light", "dark"]) {
     if (theme === "dark")
       await page.getByRole("button", { name: "Dark mode" }).click();
@@ -140,7 +140,7 @@ test("short landscape iPad keeps navigation controls reachable", async ({
     .boundingBox();
   expect(themeBounds!.y + themeBounds!.height).toBeLessThanOrEqual(768);
   await page.getByRole("button", { name: "Week", exact: true }).click();
-  await expect(page.locator("h1")).toContainText("Make room for");
+  await expect(page.locator("h1")).toContainText("A week with room");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
