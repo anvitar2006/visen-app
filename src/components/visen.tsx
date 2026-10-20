@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   CircleHelp,
-  Flower2,
   Menu,
   Moon,
   Plus,
@@ -197,7 +196,6 @@ export default function Visen() {
         </div>
         <div className="sidebar-bottom">
           <div className="sidebar-quote">
-            <Flower2 size={25} strokeWidth={1} />
             <p>
               Small steps.
               <br />A life that feels like you.
@@ -254,22 +252,24 @@ export default function Visen() {
           </div>
         </header>
         <div className="page-content">
-          <PageHeading
-            eyebrow={headings[view].eyebrow}
-            title={headings[view].title}
-            description={headings[view].description}
-            action={
-              headings[view].action ? (
-                <button
-                  className="outline-button heading-action"
-                  onClick={demo}
-                >
-                  <Plus size={16} />
-                  {headings[view].action}
-                </button>
-              ) : undefined
-            }
-          />
+          {view !== "Sana" && (
+            <PageHeading
+              eyebrow={headings[view].eyebrow}
+              title={headings[view].title}
+              description={headings[view].description}
+              action={
+                headings[view].action ? (
+                  <button
+                    className="outline-button heading-action"
+                    onClick={demo}
+                  >
+                    <Plus size={16} />
+                    {headings[view].action}
+                  </button>
+                ) : undefined
+              }
+            />
+          )}
           {notice && (
             <div className="notice" role="status">
               <span>

@@ -1,156 +1,131 @@
 "use client";
 import { useState } from "react";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import SanaMark from "@/components/sana-mark";
 import { todayPriorities, timeLabel } from "@/domain/sample";
-const prompts = [
+const examples = [
   {
     title: "Help me find my focus today",
-    context: "A thoughtful place to begin",
     reply:
-      "Your portfolio is connected to a goal you care about. In this sample day, there’s room for a focused session before Pilates. The rest doesn’t need to be solved all at once.",
+      "In this example, your portfolio is the main priority. You could give it 45 minutes before Pilates and leave the afternoon a little more open.",
   },
   {
-    title: "Make a little room in my week",
-    context: "When the calendar feels full",
+    title: "Take a look at my week",
     reply:
-      "Thursday has several commitments in this example. It might feel better to leave the flexible application review for another day. You would choose whether to make that change.",
+      "Thursday has a few fixed commitments in the sample calendar. The application review is flexible, so that’s one thing you could consider moving.",
   },
   {
-    title: "Reconnect with my bigger picture",
-    context: "Remember what you’re moving toward",
+    title: "How do my plans connect to my goals?",
     reply:
-      "Meaningful work, wellbeing, and curiosity are the three directions in this sample vision. Your plans can make room for all three, without asking every day to do everything.",
+      "The portfolio work supports Alex’s career goal, while Pilates supports their wellbeing goal. These are examples from the sample profile, not observations about you.",
   },
 ];
 export default function SanaView() {
   const [draft, setDraft] = useState("");
-  const [selection, setSelection] = useState<number | null>(null);
-  const [submitted, setSubmitted] = useState("");
+  const [answer, setAnswer] = useState<string | null>(null);
+  const [note, setNote] = useState("");
   return (
-    <section className="sana-editorial">
-      <div className="sana-main">
-        <div className="sana-welcome">
-          <SanaMark />
-          <span className="sana-signature">Sana</span>
-          <span className="sana-role">YOUR AI PLANNING ASSISTANT</span>
+    <section className="sana-studio">
+      <header className="sana-byline">
+        <SanaMark small />
+        <span>Sana</span>
+        <small>AI planning assistant · Scripted preview</small>
+      </header>
+      <h1>What’s on your mind?</h1>
+      <p className="sana-invitation">
+        A busy day, a decision, or just figuring out where to start.
+        <br className="sana-desktop-break" /> There’s no need to have it all
+        worked out.
+      </p>
+      <form
+        className="sana-writing-desk"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (draft.trim()) {
+            setNote(draft.trim());
+            setAnswer(
+              "This is a preview of the conversation space. Your note hasn’t been interpreted or sent to a model.",
+            );
+            setDraft("");
+          }
+        }}
+      >
+        <label className="sr-only" htmlFor="sana-message">
+          A note to Sana
+        </label>
+        <textarea
+          id="sana-message"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="Tell me what you’re working through…"
+          rows={4}
+          maxLength={500}
+        />
+        <div>
+          <span>Just a place to start.</span>
+          <button aria-label="Preview message" disabled={!draft.trim()}>
+            Preview note
+            <ArrowRight size={16} />
+          </button>
         </div>
-        <h2>
-          A little room
-          <br />
-          to think clearly.
-        </h2>
-        <p className="sana-opening">
-          A full week, a bigger decision, or a thought you haven’t quite
-          untangled. We can start with what’s on your mind.
-        </p>
-        <span className="sana-disclosure">
-          Scripted interface preview · No live AI
-        </span>
-        <div
-          className="sana-prompts"
-          aria-label="Preview a planning conversation"
-        >
-          {prompts.map((p, i) => (
-            <button
-              key={p.title}
-              onClick={() => {
-                setSelection(i);
-                setSubmitted("");
-              }}
-              aria-pressed={selection === i}
-            >
-              <span className="prompt-number">0{i + 1}</span>
-              <span>
-                <strong>{p.title}</strong>
-                <small>{p.context}</small>
-              </span>
-              <ArrowUpRight size={17} />
-            </button>
+      </form>
+      <p className="sana-preview-explanation">
+        This preview doesn’t use live AI. Your notes aren’t saved or sent to an
+        AI service.
+      </p>
+      {answer && (
+        <div className="sana-letter-reply" role="status">
+          <span>Example response</span>
+          {note && <blockquote>{note}</blockquote>}
+          <p>{answer}</p>
+          <small>Nothing will change without your approval.</small>
+          <button
+            onClick={() => {
+              setAnswer(null);
+              setNote("");
+            }}
+          >
+            Close example
+          </button>
+        </div>
+      )}
+      <section
+        className="sana-starting-points"
+        aria-label="Sample conversation starters"
+      >
+        <h2>Not sure where to begin?</h2>
+        <ul>
+          {examples.map((example) => (
+            <li key={example.title}>
+              <button
+                onClick={() => {
+                  setNote("");
+                  setAnswer(example.reply);
+                }}
+              >
+                {example.title}
+              </button>
+            </li>
           ))}
-        </div>
-        {(selection !== null || submitted) && (
-          <div className="sana-sample-answer" role="status">
-            <span className="eyebrow">SCRIPTED PREVIEW</span>
-            {submitted && (
-              <p className="sana-submitted">
-                <strong>Your example note</strong>
-                {submitted}
-              </p>
-            )}
-            <p>
-              {selection !== null
-                ? prompts[selection].reply
-                : "This space previews a planning conversation. Your note has not been sent to a model, interpreted, or saved."}
-            </p>
-            <span>Nothing will change without your approval.</span>
+        </ul>
+      </section>
+      <details className="sana-sample-day">
+        <summary>
+          View the sample day
+          <ChevronDown size={15} />
+        </summary>
+        <p>These plans belong to the fictional sample profile.</p>
+        {todayPriorities.slice(0, 2).map((task) => (
+          <div key={task.id}>
+            <span>
+              {task.scheduledStart
+                ? timeLabel(task.scheduledStart)
+                : "Flexible"}
+            </span>
+            <strong>{task.title}</strong>
           </div>
-        )}
-        <form
-          className="sana-note-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (draft.trim()) {
-              setSubmitted(draft.trim());
-              setSelection(null);
-              setDraft("");
-            }
-          }}
-        >
-          <label htmlFor="sana-message">Or, leave a little thought here.</label>
-          <textarea
-            id="sana-message"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            placeholder="What would you like to make room for?"
-            rows={2}
-            maxLength={500}
-          />
-          <div>
-            <span>This note stays in page memory only.</span>
-            <button aria-label="Preview message" disabled={!draft.trim()}>
-              Preview note
-              <ArrowRight size={16} />
-            </button>
-          </div>
-        </form>
-      </div>
-      <aside className="sana-context">
-        <span className="eyebrow">A LITTLE CONTEXT</span>
-        <h3>Your example day</h3>
-        <p>
-          A few plans from the sample profile. No personal information is being
-          remembered.
-        </p>
-        <div className="sana-context-plans">
-          {todayPriorities.slice(0, 2).map((t) => (
-            <div key={t.id}>
-              <span>
-                {t.scheduledStart ? timeLabel(t.scheduledStart) : "Flexible"}
-              </span>
-              <strong>{t.title}</strong>
-            </div>
-          ))}
-        </div>
-        <div className="sana-context-vision">
-          <span className="eyebrow">THE BIGGER PICTURE</span>
-          <p>
-            “Meaningful work.
-            <br />A healthy mind.
-            <br />
-            Room to stay curious.”
-          </p>
-          <span>From Alex’s sample vision</span>
-        </div>
-        <div className="sana-promise">
-          <SanaMark small />
-          <p>
-            Thoughtful guidance.
-            <br />
-            Your decisions, always.
-          </p>
-        </div>
-      </aside>
+        ))}
+      </details>
     </section>
   );
 }

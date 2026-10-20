@@ -8,7 +8,7 @@ Branch: `design/phase-2`. This is a running, read-only sample-data application. 
 - **Week:** an editorial seven-day calendar with fine rules and labeled category markers. Timed commitments use a quiet outline; scheduled tasks are labeled time blocks. Narrower tablets/phones get a seven-day selector and a roomy day agenda.
 - **My Vision:** a personal letter alongside a natural notebook/plant photograph, followed by three open goal rows. Colored goal cards have been removed.
 - **Habits:** a spacious consistency table without a global productivity score or punitive streak language. The weekly table becomes labeled ritual rows on smaller devices.
-- **Sana:** an open S signature, editorial prompt rows, selected sample context, and an ephemeral note field. The screen explicitly labels its scripted preview. No chatbot bubbles, AI avatar, live inference, or onboarding flow.
+- **Sana:** a single-stroke S signature and a spacious, single-column writing area. Plain conversation starters replace competing panels, and sample-day context stays behind an optional disclosure. Notes are ephemeral. The screen explicitly labels its scripted preview. No chatbot bubbles, AI avatar, live inference, or onboarding flow.
 
 The Visen wordmark retains its original DM Serif Display typography, size, and letter spacing. Serif italics are reserved for the vision letter. Main titles use a 34–44px scale; section titles use roughly 24–29px; functional body text uses 14–16px. Small contextual labels have been enlarged; the most compact calendar metadata is 10–11px. Device-level Safari readability and VoiceOver still need a real iPad session.
 

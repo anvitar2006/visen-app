@@ -3717,3 +3717,253 @@ details[open] > summary .disclosure-action svg {
 .view-switcher [aria-selected="true"] {
   background: var(--rose-soft);
 }
+
+/* Sana is a writing space first; sample context stays out of the way. */
+.sana-studio {
+  max-width: 740px;
+  margin: 8px auto 42px;
+  padding: 18px 0 0;
+}
+.sana-byline {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 31px;
+}
+.sana-byline > span:not(.sana-mark) {
+  font-family: var(--serif);
+  font-size: 25px;
+  color: var(--rose);
+}
+.sana-byline small {
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: auto;
+}
+.sana-studio h1 {
+  font-size: 42px;
+  letter-spacing: -0.65px;
+  margin: 0 0 19px;
+}
+.sana-invitation {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.9;
+  margin-bottom: 27px;
+}
+.sana-writing-desk {
+  background: var(--surface);
+  border: 1px solid var(--strong-line);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.sana-writing-desk textarea {
+  display: block;
+  resize: vertical;
+  min-height: 146px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 22px 23px 12px;
+  font-size: 16px;
+  line-height: 1.85;
+}
+.sana-writing-desk textarea::placeholder {
+  color: var(--muted);
+}
+.sana-writing-desk textarea:focus-visible {
+  outline-offset: -4px;
+}
+.sana-writing-desk > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 15px 15px 23px;
+  gap: 15px;
+}
+.sana-writing-desk > div > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.sana-writing-desk button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 9px 14px;
+  border-radius: 3px;
+  background: var(--rose-soft);
+  font-size: 12px;
+}
+.sana-writing-desk button:hover {
+  background: var(--rose-wash);
+}
+.sana-preview-explanation {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 13px;
+  line-height: 1.9;
+}
+.sana-starting-points {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid var(--line);
+}
+.sana-starting-points h2 {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 9px;
+  letter-spacing: 0;
+}
+.sana-starting-points ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sana-starting-points button {
+  display: block;
+  min-height: 44px;
+  text-align: left;
+  font-size: 14px;
+  padding: 10px 0;
+  color: var(--rose);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 5px;
+}
+.sana-starting-points button:hover {
+  background: none;
+  text-decoration-color: var(--rose);
+}
+.sana-sample-day {
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+}
+.sana-sample-day summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 55px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--muted);
+}
+.sana-sample-day > p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 0 15px;
+}
+.sana-sample-day > div {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  padding: 12px 0;
+  font-size: 13px;
+}
+.sana-sample-day > div > span {
+  font-size: 11px;
+  color: var(--muted);
+  min-width: 64px;
+}
+.sana-sample-day strong {
+  font-weight: 400;
+}
+.sana-letter-reply {
+  margin: 28px 0 0;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.sana-letter-reply > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.sana-letter-reply > p {
+  font-size: 15px;
+  line-height: 1.9;
+  margin: 12px 0;
+}
+.sana-letter-reply > small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+.sana-letter-reply blockquote {
+  border-left: 1px solid var(--strong-line);
+  padding-left: 16px;
+  margin: 15px 0;
+  color: var(--muted);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.sana-letter-reply > button {
+  font-size: 12px;
+  min-height: 44px;
+  color: var(--rose);
+  padding: 10px 0;
+  margin-top: 7px;
+}
+@media (max-width: 1100px) {
+  .sana-studio {
+    margin-top: 0;
+    padding-top: 6px;
+  }
+  .sana-studio h1 {
+    font-size: 37px;
+  }
+  .sana-desktop-break {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .sana-byline {
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 25px;
+  }
+  .sana-byline small {
+    flex-basis: 100%;
+    margin-left: 31px;
+    font-size: 10px;
+  }
+  .sana-studio h1 {
+    font-size: 34px;
+    line-height: 1.25;
+  }
+  .sana-invitation {
+    font-size: 14px;
+  }
+  .sana-writing-desk textarea {
+    padding: 18px;
+    min-height: 145px;
+  }
+  .sana-writing-desk > div {
+    padding: 5px 12px 12px 18px;
+  }
+  .sana-writing-desk > div > span {
+    font-size: 10px;
+  }
+  .sana-writing-desk button {
+    font-size: 11px;
+    padding: 9px 11px;
+  }
+  .sana-preview-explanation {
+    font-size: 10px;
+  }
+  .sana-starting-points button {
+    font-size: 13px;
+  }
+  .sana-sample-day > div {
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .sana-sample-day strong {
+    font-size: 12px;
+  }
+  .sana-letter-reply > p {
+    font-size: 14px;
+  }
+}
