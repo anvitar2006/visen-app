@@ -1,0 +1,319 @@
+"use client";
+import SanaView from "@/features/sana/view";
+import HabitsView from "@/features/habits/view";
+import VisionView from "@/features/vision/view";
+import WeekView from "@/features/week/view";
+import TodayView from "@/features/today/view";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  CircleHelp,
+  Flower2,
+  LayoutGrid,
+  Leaf,
+  Menu,
+  Moon,
+  Plus,
+  Sun,
+  Target,
+  X,
+} from "lucide-react";
+import type { View } from "@/domain/sample";
+import SanaMark from "@/components/sana-mark";
+const navigation = [
+  { name: "Today" as View, icon: LayoutGrid },
+  { name: "Week" as View, icon: CalendarDays },
+  { name: "My Vision" as View, icon: Target },
+  { name: "Habits" as View, icon: Leaf },
+];
+export default function Visen() {
+  const [view, setView] = useState<View>("Today");
+  const [dark, setDark] = useState<boolean | null>(null);
+  const [mobile, setMobile] = useState(false);
+  const navigationRef = useRef<HTMLElement>(null);
+  const [menu, setMenu] = useState(false);
+  const [notice, setNotice] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 760px)");
+    const update = () => {
+      setMobile(query.matches);
+      if (!query.matches) setMenu(false);
+    };
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (!menu || !mobile) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const oldOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const panel = navigationRef.current;
+    panel?.querySelector<HTMLButtonElement>(".mobile-close")?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenu(false);
+        return;
+      }
+      if (event.key !== "Tab" || !panel) return;
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>("a[href], button:not([disabled])"),
+      ).filter((el) => el.getClientRects().length > 0);
+      const first = focusable[0],
+        last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      }
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = oldOverflow;
+      document.removeEventListener("keydown", handleKey);
+      previous?.focus();
+    };
+  }, [menu, mobile]);
+  useEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = localStorage.getItem("visen-theme");
+    } catch {}
+    setDark(
+      saved
+        ? saved === "dark"
+        : window.matchMedia("(prefers-color-scheme: dark)").matches,
+    );
+    const m = window.matchMedia("(prefers-color-scheme: dark)");
+    const update = () => {
+      try {
+        if (!localStorage.getItem("visen-theme")) setDark(m.matches);
+      } catch {
+        setDark(m.matches);
+      }
+    };
+    m.addEventListener("change", update);
+    return () => m.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (dark !== null)
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+  }, [dark]);
+  function toggleTheme() {
+    setDark(!dark);
+    try {
+      localStorage.setItem("visen-theme", dark ? "light" : "dark");
+    } catch {}
+  }
+  function navigate(next: View) {
+    setView(next);
+    setMenu(false);
+    setNotice(false);
+  }
+  const demo = () => setNotice(true);
+  return (
+    <div className="app-shell">
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+      <aside
+        id="main-navigation"
+        ref={navigationRef}
+        inert={mobile && !menu}
+        role={mobile && menu ? "dialog" : undefined}
+        aria-modal={mobile && menu ? true : undefined}
+        className={`sidebar ${menu ? "open" : ""}`}
+        aria-label="Main navigation"
+      >
+        <a className="wordmark" href="#today" onClick={() => navigate("Today")}>
+          visen
+        </a>
+        <p className="brand-caption">BECOME WHO YOU ENVISION.</p>
+        <button
+          className="mobile-close icon-button"
+          aria-label="Close navigation"
+          onClick={() => setMenu(false)}
+        >
+          <X size={21} />
+        </button>
+        <nav>
+          {navigation.map(({ name, icon: Icon }) => (
+            <button
+              key={name}
+              className={`nav-item ${view === name ? "active" : ""}`}
+              aria-current={view === name ? "page" : undefined}
+              onClick={() => navigate(name)}
+            >
+              <Icon size={19} strokeWidth={1.5} />
+              {name}
+              {view === name && <span className="active-dot" />}
+            </button>
+          ))}
+        </nav>
+        <div className="sidebar-sana">
+          <span className="eyebrow">A LITTLE GUIDANCE</span>
+          <button
+            className={`nav-item ${view === "Sana" ? "active" : ""}`}
+            onClick={() => navigate("Sana")}
+          >
+            <SanaMark small />
+            Meet Sana
+            <ArrowUpRight size={15} />
+          </button>
+        </div>
+        <div className="sidebar-bottom">
+          <div className="sidebar-quote">
+            <Flower2 size={25} strokeWidth={1} />
+            <p>
+              Small steps.
+              <br />A life that feels like you.
+            </p>
+          </div>
+          <button className="theme-button" onClick={toggleTheme}>
+            {dark ? <Sun size={17} /> : <Moon size={17} />}
+            <span>{dark ? "Light mode" : "Dark mode"}</span>
+          </button>
+          <div className="profile">
+            <span className="avatar">A</span>
+            <div>
+              <strong>Alex Morgan</strong>
+              <span>Your personal space</span>
+            </div>
+            <span className="sample-pill">DEMO</span>
+          </div>
+        </div>
+      </aside>
+      {menu && (
+        <button
+          className="nav-backdrop"
+          aria-label="Close navigation overlay"
+          onClick={() => setMenu(false)}
+        />
+      )}
+      <main id="main-content" tabIndex={-1} inert={mobile && menu}>
+        <header className="topbar">
+          <div className="breadcrumb">
+            <button
+              className="mobile-menu icon-button"
+              aria-label="Open navigation"
+              aria-expanded={menu}
+              aria-controls="main-navigation"
+              onClick={() => setMenu(true)}
+            >
+              <Menu size={21} />
+            </button>
+            <span>Your space</span>
+            <span className="slash">/</span>
+            <strong>{view}</strong>
+          </div>
+          <div className="topbar-right">
+            <span className="demo-label">
+              <span /> SAMPLE EXPERIENCE
+            </span>
+            <button
+              className="icon-button"
+              aria-label="About this preview"
+              onClick={demo}
+            >
+              <CircleHelp size={18} />
+            </button>
+          </div>
+        </header>
+        <div className="page-content">
+          <div className="page-heading">
+            <div>
+              <p className="eyebrow">
+                {view === "Today"
+                  ? "TUESDAY, OCTOBER 20 · SAMPLE DAY"
+                  : view === "Week"
+                    ? "OCTOBER 19 – 25, 2026"
+                    : view === "My Vision"
+                      ? "THE BIGGER PICTURE"
+                      : view === "Habits"
+                        ? "THE THINGS YOU COME BACK TO"
+                        : "YOUR AI PLANNING ASSISTANT"}
+              </p>
+              <h1>
+                {view === "Today" ? (
+                  <>
+                    A little more <em>intention.</em>
+                  </>
+                ) : view === "Week" ? (
+                  <>
+                    Make room for <em>what matters.</em>
+                  </>
+                ) : view === "My Vision" ? (
+                  <>
+                    The life you <em>envision.</em>
+                  </>
+                ) : view === "Habits" ? (
+                  <>
+                    Small rituals. <em>Lasting change.</em>
+                  </>
+                ) : (
+                  <>
+                    A little perspective, <em>with Sana.</em>
+                  </>
+                )}
+              </h1>
+              <p className="heading-description">
+                {view === "Today"
+                  ? "Good morning, Alex. There’s space for progress and a little breathing room."
+                  : view === "Week"
+                    ? "A thoughtful rhythm for your week. Not every hour needs a plan."
+                    : view === "My Vision"
+                      ? "Let the bigger picture bring a little meaning to the everyday."
+                      : view === "Habits"
+                        ? "Build a rhythm that supports you. You can always begin again."
+                        : "A thoughtful space to sort through what’s on your mind."}
+              </p>
+            </div>
+            {view !== "Sana" && (
+              <button className="outline-button heading-action" onClick={demo}>
+                <Plus size={16} />
+                {view === "Today"
+                  ? "Add a task"
+                  : view === "Week"
+                    ? "Add to week"
+                    : view === "My Vision"
+                      ? "New goal"
+                      : "New habit"}
+              </button>
+            )}
+          </div>
+          {notice && (
+            <div className="notice" role="status">
+              <span>
+                This is the visual preview. Planning changes arrive in Phase 3;
+                Sana’s guided suggestions arrive in Phase 4. No data has been
+                changed.
+              </span>
+              <button
+                className="icon-button"
+                aria-label="Dismiss preview information"
+                onClick={() => setNotice(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+          )}
+          {view === "Today" && <TodayView demo={demo} navigate={navigate} />}
+          {view === "Week" && <WeekView demo={demo} navigate={navigate} />}
+          {view === "My Vision" && <VisionView demo={demo} />}
+          {view === "Habits" && <HabitsView demo={demo} />}
+          {view === "Sana" && <SanaView />}
+          <footer className="page-footer">
+            <span>
+              VISEN <span className="footer-dot">·</span> A LIFE WITH INTENTION
+            </span>
+            <span>Sample content · Visual foundation</span>
+          </footer>
+        </div>
+      </main>
+    </div>
+  );
+}
