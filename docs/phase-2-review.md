@@ -55,3 +55,7 @@ Working: navigation, light/dark preference, compact week day selection, keyboard
 Visual only: task/commitment management, goal details, milestones, habit tracking, progress figures, and profile identity. Planning buttons display a clear notice and never mutate fixtures.
 
 Await design approval before Phase 3. Do not add onboarding, live AI, authentication, production persistence, or deployment as part of this review.
+
+## Engagement architecture addendum
+
+[Engagement foundations](engagement-foundation.md) records the lightweight data contracts, fictional completion history, and extracted shared components added at the founder’s request. The five-view navigation and visual direction remain intact. The additional fixture-integrity test checks stable relationships, time-aware completions, and reversible history; future engagement features remain deferred.

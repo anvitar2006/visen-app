@@ -2180,3 +2180,15 @@ h1 em {
     letter-spacing: 1px;
   }
 }
+
+/* Keep navigation reachable on short tablets and as approved destinations grow. */
+.sidebar {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.sidebar nav,
+.sidebar-sana,
+.sidebar-bottom {
+  flex-shrink: 0;
+}

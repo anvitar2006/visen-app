@@ -45,11 +45,15 @@ A server running here is for internal validation. No externally accessible previ
 - `src/app`: document, entry point, and shared theme/style tokens.
 - `src/components`: navigation shell and shared Sana identity.
 - `src/features`: separate Today, Week, Vision, Habits, and Sana views.
-- `src/domain/sample.ts`: typed view identity and clearly fictional display fixtures; these are not final persistence models.
+- `src/domain/planning.ts`: small storage-independent contracts for linked planning records and reversible completion history.
+- `src/domain/sample-planning.ts`: fictional typed records and events, without collection or persistence.
+- `src/domain/sample.ts`: read-only visual adapters and illustrative display metrics.
 - `tests`: browser, accessibility, responsive, and interaction checks.
 
 ## Assets
 
 Fonts are bundled locally through Fontsource and carry their included open font licenses. Icons use Lucide's ISC license. The locally bundled landscape photograph was obtained from the MIT-licensed Next.js example repository; see [asset provenance](docs/assets.md). There are no runtime requests to image or font providers.
 
-Phase 3 requires the founder's design approval. It will add planning behavior, storage validation, and the full domain model. Phase 4 will add guided onboarding and rule-based Sana suggestions. Genuine AI requires a separate approval milestone.
+Phase 3 requires the founder's design approval. It will add planning behavior, storage validation, and runtime validation of the planning contracts. Phase 4 will add guided onboarding and rule-based Sana suggestions. Genuine AI requires a separate approval milestone.
+
+See [engagement foundations](docs/engagement-foundation.md) for how the current data contracts and shared components support future reflection, Momentum, private circles, referrals, and Sana intelligence. These future capabilities are not implemented or exposed in navigation.

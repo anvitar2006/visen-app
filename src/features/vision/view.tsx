@@ -2,6 +2,8 @@
 
 import { ArrowUpRight, BookOpen, Leaf, Target } from "lucide-react";
 
+import ProgressBar from "@/components/ui/progress-bar";
+import SectionHeader from "@/components/ui/section-header";
 import { goals } from "@/domain/sample";
 export default function VisionView({ demo }: { demo: () => void }) {
   return (
@@ -16,13 +18,14 @@ export default function VisionView({ demo }: { demo: () => void }) {
         <p>Meaningful work. A healthy mind. People I love. Room to explore.</p>
         <span className="subtle">Sample personal vision</span>
       </section>
-      <div className="section-header vision-section-heading">
-        <h2>What I’m growing toward</h2>
-        <span className="subtle">3 meaningful directions</span>
-      </div>
+      <SectionHeader
+        className="vision-section-heading"
+        title="What I’m growing toward"
+        accessory={<span className="subtle">3 meaningful directions</span>}
+      />
       <div className="goals-grid">
         {goals.map((goal, i) => (
-          <article className={`goal-card ${goal.color}`} key={goal.title}>
+          <article className={`goal-card ${goal.color}`} key={goal.id}>
             <div className="goal-top">
               <span className="eyebrow">{goal.category}</span>
               {i === 0 ? (
@@ -39,9 +42,10 @@ export default function VisionView({ demo }: { demo: () => void }) {
               <span>{goal.steps}</span>
               <strong>{goal.progress}%</strong>
             </div>
-            <div className="progress-track">
-              <span style={{ width: `${goal.progress}%` }} />
-            </div>
+            <ProgressBar
+              value={goal.progress}
+              label={`${goal.title}: sample milestone progress`}
+            />
             <div className="next-milestone">
               <span className="eyebrow">NEXT SMALL STEP</span>
               <h3>{goal.milestone}</h3>

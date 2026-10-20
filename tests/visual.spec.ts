@@ -123,3 +123,27 @@ test("mobile navigation traps focus, closes with Escape, and follows device them
   await expect(trigger).toBeFocused();
   await expect(trigger).toHaveAttribute("aria-expanded", "false");
 });
+
+test("short landscape iPad keeps navigation controls reachable", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/");
+  const themeToggle = page.getByRole("button", {
+    name: "Dark mode",
+    exact: true,
+  });
+  await themeToggle.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  const themeBounds = await page
+    .getByRole("button", { name: "Light mode", exact: true })
+    .boundingBox();
+  expect(themeBounds!.y + themeBounds!.height).toBeLessThanOrEqual(768);
+  await page.getByRole("button", { name: "Week", exact: true }).click();
+  await expect(page.locator("h1")).toContainText("Make room for");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});

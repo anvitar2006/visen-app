@@ -1,8 +1,11 @@
 "use client";
+import type { View } from "@/components/navigation";
 
-import { ArrowRight, ArrowUpRight, Check, Leaf, Plus } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Leaf, Plus } from "lucide-react";
+import SectionHeader from "@/components/ui/section-header";
+import PreviewCompletion from "@/components/ui/preview-completion";
 import SanaMark from "@/components/sana-mark";
-import { tasks, type View } from "@/domain/sample";
+import { tasks, todayHabits } from "@/domain/sample";
 export default function TodayView({
   demo,
   navigate,
@@ -39,28 +42,26 @@ export default function TodayView({
       <div className="today-grid">
         <div className="today-primary">
           <section className="priorities">
-            <div className="section-header">
-              <div>
-                <p className="eyebrow">FOCUS ON WHAT COUNTS</p>
-                <h2>
+            <SectionHeader
+              eyebrow="FOCUS ON WHAT COUNTS"
+              title={
+                <>
                   Today’s priorities <span className="count">03</span>
-                </h2>
-              </div>
-              <span className="subtle">One thing at a time.</span>
-            </div>
+                </>
+              }
+              accessory={<span className="subtle">One thing at a time.</span>}
+            />
             <div className="task-list">
               {tasks.map((task, i) => (
                 <div
                   className={`task-row ${task.done ? "completed" : ""}`}
-                  key={task.title}
+                  key={task.id}
                 >
-                  <button
-                    className={`task-check ${task.done ? "checked" : ""}`}
-                    aria-label={`${task.done ? "Completed" : "Preview completion for"} ${task.title}`}
-                    onClick={demo}
-                  >
-                    {task.done && <Check size={14} />}
-                  </button>
+                  <PreviewCompletion
+                    completed={task.done}
+                    label={`${task.done ? "Completed" : "Preview completion for"} ${task.title}`}
+                    onPreview={demo}
+                  />
                   <div className="task-text">
                     <h3>{task.title}</h3>
                     <span>{task.detail}</span>
@@ -77,12 +78,14 @@ export default function TodayView({
             </button>
           </section>
           <section className="commitments">
-            <div className="section-header">
-              <h2>On the horizon</h2>
-              <button className="text-link" onClick={() => navigate("Week")}>
-                View week <ArrowRight size={15} />
-              </button>
-            </div>
+            <SectionHeader
+              title="On the horizon"
+              accessory={
+                <button className="text-link" onClick={() => navigate("Week")}>
+                  View week <ArrowRight size={15} />
+                </button>
+              }
+            />
             <div className="appointment">
               <span className="time">
                 11:00<span>AM</span>
@@ -131,25 +134,19 @@ export default function TodayView({
             </div>
           </section>
           <section className="daily-rhythm">
-            <div className="section-header">
-              <h2>Your daily rhythm</h2>
-              <Leaf size={17} />
-            </div>
+            <SectionHeader
+              title="Your daily rhythm"
+              accessory={<Leaf size={17} />}
+            />
             <p className="subtle">Little things that make a difference.</p>
-            {[
-              { name: "Move your body", done: false },
-              { name: "Read a little", done: true },
-              { name: "A moment of stillness", done: false },
-            ].map((h) => (
-              <div className="mini-habit" key={h.name}>
+            {todayHabits.map((h) => (
+              <div className="mini-habit" key={h.id}>
                 <span>{h.name}</span>
-                <button
-                  onClick={demo}
-                  className={`task-check ${h.done ? "checked" : ""}`}
-                  aria-label={`${h.name}: ${h.done ? "sample complete" : "sample incomplete"}`}
-                >
-                  {h.done && <Check size={13} />}
-                </button>
+                <PreviewCompletion
+                  completed={h.done}
+                  label={`${h.name}: ${h.done ? "sample complete" : "sample incomplete"}`}
+                  onPreview={demo}
+                />
               </div>
             ))}
           </section>

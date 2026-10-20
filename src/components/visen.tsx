@@ -7,26 +7,20 @@ import TodayView from "@/features/today/view";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
-  CalendarDays,
   CircleHelp,
   Flower2,
-  LayoutGrid,
-  Leaf,
   Menu,
   Moon,
   Plus,
   Sun,
-  Target,
   X,
 } from "lucide-react";
-import type { View } from "@/domain/sample";
+import {
+  primaryNavigation,
+  NavigationButton,
+  type View,
+} from "@/components/navigation";
 import SanaMark from "@/components/sana-mark";
-const navigation = [
-  { name: "Today" as View, icon: LayoutGrid },
-  { name: "Week" as View, icon: CalendarDays },
-  { name: "My Vision" as View, icon: Target },
-  { name: "Habits" as View, icon: Leaf },
-];
 export default function Visen() {
   const [view, setView] = useState<View>("Today");
   const [dark, setDark] = useState<boolean | null>(null);
@@ -141,29 +135,26 @@ export default function Visen() {
           <X size={21} />
         </button>
         <nav>
-          {navigation.map(({ name, icon: Icon }) => (
-            <button
+          {primaryNavigation.map(({ name, icon: Icon }) => (
+            <NavigationButton
               key={name}
-              className={`nav-item ${view === name ? "active" : ""}`}
-              aria-current={view === name ? "page" : undefined}
-              onClick={() => navigate(name)}
-            >
-              <Icon size={19} strokeWidth={1.5} />
-              {name}
-              {view === name && <span className="active-dot" />}
-            </button>
+              view={name}
+              active={view === name}
+              icon={<Icon size={19} strokeWidth={1.5} />}
+              onNavigate={navigate}
+            />
           ))}
         </nav>
         <div className="sidebar-sana">
           <span className="eyebrow">A LITTLE GUIDANCE</span>
-          <button
-            className={`nav-item ${view === "Sana" ? "active" : ""}`}
-            onClick={() => navigate("Sana")}
-          >
-            <SanaMark small />
-            Meet Sana
-            <ArrowUpRight size={15} />
-          </button>
+          <NavigationButton
+            view="Sana"
+            active={view === "Sana"}
+            label="Meet Sana"
+            icon={<SanaMark small />}
+            trailing={<ArrowUpRight size={15} />}
+            onNavigate={navigate}
+          />
         </div>
         <div className="sidebar-bottom">
           <div className="sidebar-quote">

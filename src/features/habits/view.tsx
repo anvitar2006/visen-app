@@ -1,7 +1,8 @@
 "use client";
 
-import { BookOpen, Check, Leaf, Plus, Sun } from "lucide-react";
+import { BookOpen, Leaf, Plus, Sun } from "lucide-react";
 
+import PreviewCompletion from "@/components/ui/preview-completion";
 import { days, habits } from "@/domain/sample";
 export default function HabitsView({ demo }: { demo: () => void }) {
   return (
@@ -40,7 +41,7 @@ export default function HabitsView({ demo }: { demo: () => void }) {
           <span>THIS WEEK</span>
         </div>
         {habits.map((h, i) => (
-          <div className="habit-table-row" key={h.name}>
+          <div className="habit-table-row" key={h.id}>
             <div className="habit-name">
               <span
                 className={`habit-icon ${i === 0 ? "sage" : i === 1 ? "sand" : "rose"}`}
@@ -60,17 +61,17 @@ export default function HabitsView({ demo }: { demo: () => void }) {
             </div>
             <div className="habit-days">
               {h.days.map((done, j) => (
-                <button
-                  className={`habit-day ${done ? "done" : ""}`}
+                <PreviewCompletion
                   key={j}
-                  onClick={demo}
-                  aria-label={`${h.name}, ${days[j].name}, ${done ? "completed" : "not completed"} in sample`}
+                  variant="day"
+                  completed={done}
+                  onPreview={demo}
+                  label={`${h.name}, ${days[j].name}, ${done ? "completed" : "not completed"} in sample`}
                 >
                   <b className="habit-day-label" aria-hidden="true">
                     {days[j].name[0]}
                   </b>
-                  {done ? <Check size={15} /> : <span />}
-                </button>
+                </PreviewCompletion>
               ))}
             </div>
             <span className="habit-total">

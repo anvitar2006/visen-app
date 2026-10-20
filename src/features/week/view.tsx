@@ -1,8 +1,9 @@
 "use client";
+import type { View } from "@/components/navigation";
 import { useState } from "react";
 import { ArrowUpRight, Leaf, Plus } from "lucide-react";
 
-import { days, weekItemDetails, type View } from "@/domain/sample";
+import { days, weekItemDetails } from "@/domain/sample";
 export default function WeekView({
   demo,
   navigate,

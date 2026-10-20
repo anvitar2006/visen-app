@@ -1,27 +1,90 @@
-export type View = "Today" | "Week" | "My Vision" | "Habits" | "Sana";
-export const tasks = [
-  {
-    title: "Refine my portfolio case study",
+import {
+  sampleTasks,
+  sampleGoals,
+  sampleMilestones,
+  sampleHabits,
+} from "./sample-planning";
+// Read-only display adapters. Snapshot progress is illustrative, not a production calculation.
+const taskDisplay = {
+  "task-portfolio": {
     detail: "Career & purpose · 45 min",
     category: "Career",
     color: "rose",
-    done: false,
   },
-  {
-    title: "Pilates at the studio",
+  "task-pilates": {
     detail: "11:00 AM · 50 min",
     category: "Wellbeing",
     color: "sage",
-    done: false,
   },
-  {
-    title: "Read 20 pages",
+  "task-reading": {
     detail: "Personal growth · 20 min",
     category: "Personal",
     color: "sand",
-    done: true,
   },
-];
+};
+const goalDisplay = {
+  "goal-career": {
+    category: "CAREER & PURPOSE",
+    progress: 42,
+    steps: "3 of 7 milestones",
+    color: "rose",
+    nextMilestoneId: "milestone-1-4",
+  },
+  "goal-wellbeing": {
+    category: "MIND & BODY",
+    progress: 60,
+    steps: "3 of 5 milestones",
+    color: "sage",
+    nextMilestoneId: "milestone-2-4",
+  },
+  "goal-curiosity": {
+    category: "PERSONAL GROWTH",
+    progress: 25,
+    steps: "1 of 4 milestones",
+    color: "sand",
+    nextMilestoneId: "milestone-3-2",
+  },
+};
+const habitDisplay = {
+  "habit-movement": {
+    detail: "3 times a week",
+    days: [true, false, false, false, false, false, false],
+    count: "1 of 3",
+  },
+  "habit-reading": {
+    detail: "5 times a week",
+    days: [true, true, false, false, false, false, false],
+    count: "2 of 5",
+  },
+  "habit-stillness": {
+    detail: "Every day",
+    days: [true, false, false, false, false, false, false],
+    count: "1 of 7",
+  },
+};
+export const tasks = sampleTasks.map((task) => ({
+  ...task,
+  ...taskDisplay[task.id],
+  done: task.status === "completed",
+}));
+export const goals = sampleGoals.map((goal) => ({
+  ...goal,
+  ...goalDisplay[goal.id],
+  detail: goal.description,
+  milestone: sampleMilestones.find(
+    (m) => m.id === goalDisplay[goal.id].nextMilestoneId,
+  )!.title,
+}));
+export const habits = sampleHabits.map((habit) => ({
+  ...habit,
+  ...habitDisplay[habit.id],
+}));
+// Tuesday is the fixed sample day; this is a display snapshot, not a scheduling engine.
+export const todayHabits = habits.map((habit) => ({
+  id: habit.id,
+  name: habit.name,
+  done: habit.days[1],
+}));
 export const days = [
   {
     name: "Mon",
@@ -71,56 +134,6 @@ export const days = [
     load: "Rest & reset",
   },
 ];
-export const goals = [
-  {
-    category: "CAREER & PURPOSE",
-    title: "Build a career that feels like me",
-    detail: "Thoughtful work. Room to grow. Something to be proud of.",
-    progress: 42,
-    milestone: "Finish my portfolio",
-    steps: "3 of 7 milestones",
-    color: "rose",
-  },
-  {
-    category: "MIND & BODY",
-    title: "Feel stronger, inside and out",
-    detail: "Make movement and a little stillness part of everyday life.",
-    progress: 60,
-    milestone: "Find a routine I enjoy",
-    steps: "3 of 5 milestones",
-    color: "sage",
-  },
-  {
-    category: "PERSONAL GROWTH",
-    title: "Stay curious about the world",
-    detail: "More books, new places, and conversations that matter.",
-    progress: 25,
-    milestone: "Read twelve books this year",
-    steps: "1 of 4 milestones",
-    color: "sand",
-  },
-];
-export const habits = [
-  {
-    name: "Move my body",
-    detail: "3 times a week",
-    days: [true, false, false, false, false, false, false],
-    count: "1 of 3",
-  },
-  {
-    name: "Read a little",
-    detail: "5 times a week",
-    days: [true, true, false, false, false, false, false],
-    count: "2 of 5",
-  },
-  {
-    name: "A moment of stillness",
-    detail: "Every day",
-    days: [true, false, false, false, false, false, false],
-    count: "1 of 7",
-  },
-];
-
 export const weekItemDetails: Record<
   string,
   { category: string; color: "rose" | "sage" | "sand"; detail: string }
