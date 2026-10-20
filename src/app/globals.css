@@ -10,16 +10,17 @@
   --line: #e2d9d0;
   --strong-line: #c9bdb2;
   --rose: #895364;
-  --rose-soft: #ecdbdf;
+  --rose-soft: #ead1d9;
+  --rose-wash: #f3e5e6;
   --sage: #53634b;
-  --sage-soft: #e8ece2;
+  --sage-soft: #e2eadb;
   --blue: #506879;
-  --blue-soft: #e7edf1;
-  --lavender: #72617f;
-  --lavender-soft: #eee8f2;
+  --blue-soft: #dfeaf1;
+  --lavender: #665171;
+  --lavender-soft: #eae1f0;
   --taupe: #79634c;
   --taupe-soft: #eee5d9;
-  --sana: #eee9e2;
+  --sana: #e5eadc;
   --sana-ink: #3f493e;
   --focus: #805063;
   --serif: "DM Serif Display", Georgia, serif;
@@ -45,16 +46,17 @@
   --line: #463b3c;
   --strong-line: #766469;
   --rose: #dfb4bf;
-  --rose-soft: #49323b;
+  --rose-soft: #51343f;
+  --rose-wash: #36292f;
   --sage: #bbcca9;
-  --sage-soft: #343d31;
+  --sage-soft: #364632;
   --blue: #acc6d5;
-  --blue-soft: #303c45;
+  --blue-soft: #30434f;
   --lavender: #c9b4d6;
-  --lavender-soft: #403447;
+  --lavender-soft: #473650;
   --taupe: #d7c0a0;
   --taupe-soft: #40362c;
-  --sana: #343730;
+  --sana: #354332;
   --sana-ink: #e5ebdb;
   --focus: #e4bcc7;
   color-scheme: dark;
@@ -3688,4 +3690,30 @@ details[open] > summary .disclosure-action svg {
   .calendar-entry > .deadline-label {
     grid-column: 2;
   }
+}
+
+/* A little more color, concentrated in existing editorial surfaces. */
+.today-intention {
+  background: var(--rose-wash);
+  border-color: transparent;
+  border-radius: 4px;
+  padding-inline: 20px;
+}
+.vision-letter {
+  background: var(--rose-wash);
+}
+.habit-introduction {
+  background: var(--sage-soft);
+  border-color: transparent;
+  border-radius: 4px;
+  padding-inline: 20px;
+}
+.priority-copy .category-label,
+.workflow-card > .category-label {
+  background: var(--tone-soft);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+.view-switcher [aria-selected="true"] {
+  background: var(--rose-soft);
 }

@@ -41,7 +41,7 @@ These presentations are interactive previews, not editing workflows. Dragging, c
 
 Categories use muted sage (wellbeing), dusty blue (work/focus), lavender (creativity/reflection), and taupe (personal/connection). Dusty rose marks selected controls and priority flags. Each category also has a text label, and high priority has an explicit flag/label independent of category. These are editable-category foundations, not universal claims about color psychology. Custom categories/colors require Phase 3.
 
-Shared warm light/dark tokens define surfaces, text, dividers, focus, and semantic tones. Native details/summary elements progressively reveal supporting Today content. Both themes respect reduced motion and provide visible keyboard focus. Sidebar controls remain reachable on short tablets.
+Shared warm light/dark tokens define surfaces, text, dividers, focus, and semantic tones. The follow-up color pass adds blush to the daily intention and vision letter, sage to Sana and habit introduction surfaces, and quiet category tags. Selected planning tabs use blush in both themes. Native details/summary elements progressively reveal supporting Today content. Both themes respect reduced motion and provide visible keyboard focus. Sidebar controls remain reachable on short tablets.
 
 ## Validation
 
