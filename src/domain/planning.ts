@@ -1,6 +1,6 @@
-/** Data contracts only. Phase 2 has no planning writes, history service, or accounts. */
+/** Storage-independent planning contracts. Runtime local-storage validation lives in storage.ts. */
 export type LocalDate = `${number}-${number}-${number}`;
-export type Timestamp = string; // ISO 8601 UTC; validate at a future storage boundary.
+export type Timestamp = string; // ISO 8601 UTC; validated at the storage boundary.
 export type EntityId = string;
 export type PlanningStatus = "active" | "paused" | "completed";
 export interface PlanningRecord {

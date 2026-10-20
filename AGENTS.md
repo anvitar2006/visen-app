@@ -18,3 +18,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Engagement/retention foundations are limited to typed records, fictional history, shared presentation, and documented future boundaries. See `docs/engagement-foundation.md`; no rewards, sharing, referrals, reflection engine, or live Sana intelligence is authorized yet.
 
 - The founder additionally approved the comprehensive Phase 2 design refinement and pushing `design/phase-2`. Read-only List/Calendar/Board/Timeline previews are authorized. Editing, drag-and-drop, scheduling writes, preferred-view persistence, onboarding, deployment, and Codespace creation still require the relevant separate approval.
+
+## Phase 3 approval
+
+The founder has approved the Phase 2 design and authorized Phase 3 on a separate development branch: functional local planning, tasks and shared views, commitments/time blocks, goals/milestones, habits, categories, preferences/profile, validated versioned browser storage, import/export/reset/undo, and thorough tests. Preserve the approved visual identity. The earlier Phase 2-only limits are superseded for these features. Phase 4 Sana onboarding/intelligence, live AI, authentication, public deployment, paid services, social/reward features, and merging main still require separate approval.

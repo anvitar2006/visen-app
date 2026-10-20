@@ -1,7 +1,7 @@
 {
   "name": "visen-app",
   "version": "1.0.0",
-  "description": "Visen — an intentional planning companion. Phase 2 visual foundation.",
+  "description": "Visen — an intentional planning companion. Phase 3 local planning.",
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
@@ -28,7 +28,8 @@
     "lucide-react": "^1.60.0",
     "next": "^16.4.2",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
