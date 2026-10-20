@@ -709,7 +709,7 @@ h1 {
 .sana-note {
   background: var(--sana);
   color: var(--sana-ink);
-  border-radius: 4px;
+  border-radius: 2px 26px 2px 2px;
   padding: 24px 25px 20px;
 }
 .sana-note-heading {
@@ -866,9 +866,9 @@ details[open] > summary .disclosure-action svg {
   gap: 4px;
   align-items: center;
   padding: 4px;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  background: var(--surface-quiet);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .view-switcher button {
   display: flex;
@@ -884,7 +884,7 @@ details[open] > summary .disclosure-action svg {
 .view-switcher [aria-selected="true"] {
   background: var(--surface);
   color: var(--ink);
-  box-shadow: 0 1px 3px #302a2b08;
+  box-shadow: none;
 }
 .planning-view-description {
   display: flex;
@@ -990,8 +990,9 @@ details[open] > summary .disclosure-action svg {
   background: var(--surface-quiet);
 }
 .calendar-entry.timed-commitment {
-  border: 1px solid var(--line);
-  border-radius: 3px;
+  border: 0;
+  border-left: 2px solid var(--blue);
+  border-radius: 0;
   padding: 12px 8px;
   background: var(--surface);
 }
@@ -1184,11 +1185,12 @@ details[open] > summary .disclosure-action svg {
   flex-direction: column;
   gap: 13px;
   width: 100%;
-  padding: 20px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  margin-bottom: 12px;
+  padding: 22px 4px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  margin-bottom: 4px;
   text-align: left;
 }
 .workflow-card > strong {
@@ -1366,8 +1368,9 @@ details[open] > summary .disclosure-action svg {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
   min-height: 300px;
-  background: var(--surface-quiet);
-  border-radius: 4px;
+  background: transparent;
+  gap: 24px;
+  border-radius: 0;
   overflow: hidden;
 }
 .vision-letter {
@@ -2337,8 +2340,8 @@ details[open] > summary .disclosure-action svg {
     place-items: center;
     gap: 6px;
     min-height: 83px;
-    border: 1px solid var(--line);
-    border-radius: 4px;
+    border: 0;
+    border-radius: 22px;
     padding: 10px 5px;
   }
   .calendar-day-selector span {
@@ -3002,8 +3005,8 @@ details[open] > summary .disclosure-action svg {
     gap: 5px;
     padding: 10px 4px;
     min-height: 77px;
-    border: 1px solid var(--line);
-    border-radius: 3px;
+    border: 0;
+    border-radius: 22px;
   }
   .calendar-day-selector span {
     font-size: 10px;
@@ -3692,21 +3695,25 @@ details[open] > summary .disclosure-action svg {
   }
 }
 
-/* A little more color, concentrated in existing editorial surfaces. */
+/* Color belongs to editorial details, rather than framing every section. */
 .today-intention {
-  background: var(--rose-wash);
-  border-color: transparent;
-  border-radius: 4px;
-  padding-inline: 20px;
+  background: transparent;
+  border-color: var(--rose-soft);
+  border-radius: 0;
+  padding-inline: 0;
+}
+.today-intention > .eyebrow {
+  color: var(--rose);
 }
 .vision-letter {
-  background: var(--rose-wash);
+  background: transparent;
+  border-left: 2px solid var(--rose-soft);
 }
 .habit-introduction {
-  background: var(--sage-soft);
-  border-color: transparent;
-  border-radius: 4px;
-  padding-inline: 20px;
+  background: transparent;
+  border-color: var(--line);
+  border-radius: 0;
+  padding-inline: 0;
 }
 .priority-copy .category-label,
 .workflow-card > .category-label {
@@ -3752,10 +3759,10 @@ details[open] > summary .disclosure-action svg {
   margin-bottom: 27px;
 }
 .sana-writing-desk {
-  background: var(--surface);
-  border: 1px solid var(--strong-line);
-  border-radius: 5px;
-  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--strong-line);
+  border-radius: 0;
 }
 .sana-writing-desk textarea {
   display: block;
@@ -3764,7 +3771,7 @@ details[open] > summary .disclosure-action svg {
   width: 100%;
   border: 0;
   background: transparent;
-  padding: 22px 23px 12px;
+  padding: 18px 0 12px;
   font-size: 16px;
   line-height: 1.85;
 }
@@ -3778,7 +3785,7 @@ details[open] > summary .disclosure-action svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 15px 15px 23px;
+  padding: 9px 0 18px;
   gap: 15px;
 }
 .sana-writing-desk > div > span {
@@ -3791,7 +3798,7 @@ details[open] > summary .disclosure-action svg {
   gap: 10px;
   min-height: 44px;
   padding: 9px 14px;
-  border-radius: 3px;
+  border-radius: 22px;
   background: var(--rose-soft);
   font-size: 12px;
 }
