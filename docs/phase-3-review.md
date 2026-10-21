@@ -1,6 +1,6 @@
 # Phase 3 — functional planning review
 
-The approved Phase 2 typography, palette, photography, navigation, open compositions, and both themes remain the visual foundation. Planning edits open in a focused, keyboard-accessible dialog rather than adding permanent controls to every surface. Search stays visible; extra filters and sorting are disclosed when needed.
+The approved Phase 2 typography, palette, photography, navigation, open compositions, and both themes remain the visual foundation. The later [UI refinement report](phase-3-refinement.md) documents the quieter copy/typography and expanded validation. [Phase 4](phase-4-plan.md) remains a proposal only. Planning edits open in a focused, keyboard-accessible dialog rather than adding permanent controls to every surface. Search stays visible; extra filters and sorting are disclosed when needed.
 
 ## What works
 
@@ -68,7 +68,7 @@ Additional functional surfaces: [task editor](../artifacts/phase-3-editor-834-li
 
 ## Verification and limits
 
-Final validation: `npm run build`, `npm run typecheck`, and `npm run format:check` passed. `npm test` passed **26 tests** in 56.7 seconds against the production build. The suite refreshed 60 PNG screenshots.
+Final validation: `npm run build`, `npm run typecheck`, and `npm run format:check` passed. `npm test` passed **30 tests** in 59.7 seconds against the production build. The suite refreshed 60 PNG screenshots.
 
 Automated checks cover domain validation/migration and invalid relationships; date, leap-year, DST and zone behavior; task CRUD and all-view synchronization; goal/milestone links and deletion; habit targets/history; category reassignment; preferences and refresh persistence; import/export/reset/recovery; storage quota errors and stale tabs; keyboard dialogs/navigation; responsive overflow; and automated WCAG A/AA checks. Screenshots in `artifacts/` include iPad landscape/portrait and mobile, both themes, four planning views, and task editors. See the final review report for exact command results.
 

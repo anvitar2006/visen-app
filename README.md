@@ -12,6 +12,8 @@ Plans stay in this browser, without accounts or multi-device synchronization. Ex
 
 See [the Phase 3 review guide](docs/phase-3-review.md) for implemented behavior, data semantics, limitations, founder review steps, and how to update your existing private iPad Codespace preview.
 
+See the [Phase 3 UI refinement and validation report](docs/phase-3-refinement.md) for the latest quiet typography/copy pass and preview update steps. [Phase 4](docs/phase-4-plan.md) is a detailed proposal only, awaiting approval.
+
 ## Development
 
 Use Node 24 (tested with 24.19.0) and npm. Use this existing isolated checkout; a separate Git worktree is unnecessary.
