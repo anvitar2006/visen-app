@@ -1,14 +1,16 @@
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
-/** Visual preview only: activation explains the boundary; it never changes completion. */
+/** A labeled completion control shared by tasks and habit days. */
 export default function PreviewCompletion({
   completed,
   label,
   onPreview,
   variant = "circle",
   children,
+  disabled = false,
 }: {
   completed: boolean;
+  disabled?: boolean;
   label: string;
   onPreview: () => void;
   variant?: "circle" | "day";
@@ -22,6 +24,8 @@ export default function PreviewCompletion({
           ? `habit-day ${completed ? "done" : ""}`
           : `task-check ${completed ? "checked" : ""}`
       }
+      disabled={disabled}
+      aria-pressed={completed}
       aria-label={label}
       onClick={onPreview}
     >

@@ -1,4 +1,7 @@
 "use client";
+import { PlanningProvider, usePlanning } from "@/features/planning/store";
+import PlanningEditor from "@/features/planning/editor";
+import { dateLabel } from "@/domain/dates";
 import SanaView from "@/features/sana/view";
 import HabitsView from "@/features/habits/view";
 import VisionView from "@/features/vision/view";
@@ -13,6 +16,7 @@ import {
   Plus,
   Sun,
   X,
+  Undo2,
 } from "lucide-react";
 import {
   primaryNavigation,
@@ -60,6 +64,15 @@ const headings = {
   { eyebrow: string; title: string; description: string; action: string | null }
 >;
 export default function Visen() {
+  return (
+    <PlanningProvider>
+      <VisenApp />
+    </PlanningProvider>
+  );
+}
+function VisenApp() {
+  const planning = usePlanning();
+  const { data, openEditor, ready } = planning;
   const [view, setView] = useState<View>("Today");
   const [dark, setDark] = useState<boolean | null>(null);
   const [mobile, setMobile] = useState(false);
@@ -111,35 +124,36 @@ export default function Visen() {
     };
   }, [menu, mobile]);
   useEffect(() => {
-    let saved: string | null = null;
-    try {
-      saved = localStorage.getItem("visen-theme");
-    } catch {}
-    setDark(
-      saved
-        ? saved === "dark"
-        : window.matchMedia("(prefers-color-scheme: dark)").matches,
-    );
-    const m = window.matchMedia("(prefers-color-scheme: dark)");
-    const update = () => {
-      try {
-        if (!localStorage.getItem("visen-theme")) setDark(m.matches);
-      } catch {
-        setDark(m.matches);
-      }
-    };
-    m.addEventListener("change", update);
-    return () => m.removeEventListener("change", update);
-  }, []);
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const update = () =>
+      setDark(
+        data.preferences.theme === "system"
+          ? media.matches
+          : data.preferences.theme === "dark",
+      );
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, [data.preferences.theme]);
   useEffect(() => {
-    if (dark !== null)
+    if (dark !== null) {
       document.documentElement.dataset.theme = dark ? "dark" : "light";
-  }, [dark]);
+      try {
+        if (data.preferences.theme === "system")
+          localStorage.removeItem("visen-theme");
+        else localStorage.setItem("visen-theme", data.preferences.theme);
+      } catch {}
+    }
+  }, [dark, data.preferences.theme]);
   function toggleTheme() {
-    setDark(!dark);
-    try {
-      localStorage.setItem("visen-theme", dark ? "light" : "dark");
-    } catch {}
+    planning.commit(
+      (d) => {
+        d.preferences.theme = dark ? "light" : "dark";
+      },
+      "Appearance saved",
+      false,
+      false,
+    );
   }
   function navigate(next: View) {
     setView(next);
@@ -147,6 +161,10 @@ export default function Visen() {
     setNotice(false);
   }
   const demo = () => setNotice(true);
+  const addPlan = () =>
+    openEditor(
+      view === "My Vision" ? "goal" : view === "Habits" ? "habit" : "task",
+    );
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
@@ -205,14 +223,23 @@ export default function Visen() {
             {dark ? <Sun size={17} /> : <Moon size={17} />}
             <span>{dark ? "Light mode" : "Dark mode"}</span>
           </button>
-          <div className="profile">
-            <span className="avatar">A</span>
+          <button
+            className="profile"
+            onClick={() => {
+              setMenu(false);
+              openEditor("settings");
+            }}
+            aria-label="Your space and data settings"
+          >
+            <span className="avatar">
+              {data.preferences.name.slice(0, 1) || "V"}
+            </span>
             <div>
-              <strong>Alex Morgan</strong>
+              <strong>{data.preferences.name || "Your space"}</strong>
               <span>Your personal space</span>
             </div>
-            <span className="sample-pill">DEMO</span>
-          </div>
+            <span className="sample-pill">LOCAL</span>
+          </button>
         </div>
       </aside>
       {menu && (
@@ -240,11 +267,21 @@ export default function Visen() {
           </div>
           <div className="topbar-right">
             <span className="demo-label">
-              <span /> SAMPLE EXPERIENCE
+              <span />{" "}
+              {data.sample ? "INCLUDES SAMPLE PLANS" : "SAVED ON THIS DEVICE"}
             </span>
             <button
               className="icon-button"
-              aria-label="About this preview"
+              aria-label="Undo last change"
+              title="Undo last change"
+              disabled={!planning.canUndo}
+              onClick={planning.undo}
+            >
+              <Undo2 size={18} />
+            </button>
+            <button
+              className="icon-button"
+              aria-label="About local storage"
               onClick={demo}
             >
               <CircleHelp size={18} />
@@ -254,14 +291,26 @@ export default function Visen() {
         <div className="page-content">
           {view !== "Sana" && (
             <PageHeading
-              eyebrow={headings[view].eyebrow}
-              title={headings[view].title}
+              eyebrow={
+                view === "Today"
+                  ? dateLabel(planning.today, {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    }).toUpperCase()
+                  : headings[view].eyebrow
+              }
+              title={
+                view === "Today"
+                  ? `Hello${data.preferences.name ? `, ${data.preferences.name}` : ""}.`
+                  : headings[view].title
+              }
               description={headings[view].description}
               action={
                 headings[view].action ? (
                   <button
                     className="outline-button heading-action"
-                    onClick={demo}
+                    onClick={addPlan}
                   >
                     <Plus size={16} />
                     {headings[view].action}
@@ -273,9 +322,9 @@ export default function Visen() {
           {notice && (
             <div className="notice" role="status">
               <span>
-                This is a read-only design preview. Planning changes and
-                personalized guidance are not available yet. No data has been
-                changed.
+                Plans are saved only in this browser, without accounts or cloud
+                sync. Export a backup from Your space. Sana is still a scripted
+                preview; she cannot change your plans.
               </span>
               <button
                 className="icon-button"
@@ -286,19 +335,75 @@ export default function Visen() {
               </button>
             </div>
           )}
-          {view === "Today" && <TodayView demo={demo} navigate={navigate} />}
-          {view === "Week" && <WeekView demo={demo} navigate={navigate} />}
-          {view === "My Vision" && <VisionView demo={demo} />}
-          {view === "Habits" && <HabitsView demo={demo} />}
+          {!ready && <p role="status">Opening your space…</p>}
+          {planning.error && (
+            <div className="notice" role="alert">
+              <span>{planning.error}</span>
+              <button
+                className="text-link"
+                onClick={() => openEditor("settings")}
+              >
+                Data & recovery
+              </button>
+              <button
+                className="icon-button"
+                aria-label="Dismiss storage warning"
+                onClick={() => planning.setError("")}
+              >
+                <X size={18} />
+              </button>
+            </div>
+          )}
+          {planning.message && (
+            <div className="save-notice" role="status">
+              <span>{planning.message}</span>
+              {planning.canUndo && (
+                <button className="text-link" onClick={planning.undo}>
+                  Undo
+                </button>
+              )}
+              <button
+                className="icon-button"
+                aria-label="Dismiss save message"
+                onClick={() => planning.setMessage("")}
+              >
+                <X size={16} />
+              </button>
+            </div>
+          )}
+          {ready &&
+            !data.tasks.length &&
+            !data.goals.length &&
+            !data.habits.length &&
+            !data.commitments.length &&
+            view !== "Sana" && (
+              <div className="empty-welcome">
+                <p>
+                  Your space is ready. Start with one plan, or explore fictional
+                  examples.
+                </p>
+                <button
+                  className="text-link"
+                  onClick={() => openEditor("settings")}
+                >
+                  Profile, sample plans & data
+                </button>
+              </div>
+            )}
+          {ready && view === "Today" && <TodayView navigate={navigate} />}
+          {view === "Week" && <WeekView navigate={navigate} />}
+          {view === "My Vision" && <VisionView />}
+          {view === "Habits" && <HabitsView />}
           {view === "Sana" && <SanaView />}
           <footer className="page-footer">
             <span>
               VISEN <span className="footer-dot">·</span> A LIFE WITH INTENTION
             </span>
-            <span>Sample content · Visual foundation</span>
+            <span>Local planning · No cloud sync</span>
           </footer>
         </div>
       </main>
+      <PlanningEditor />
     </div>
   );
 }

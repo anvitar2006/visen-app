@@ -2,8 +2,10 @@
 import { ArrowUpRight } from "lucide-react";
 import ProgressBar from "@/components/ui/progress-bar";
 import SectionHeader from "@/components/ui/section-header";
-import { goals } from "@/domain/sample";
-export default function VisionView({ demo }: { demo: () => void }) {
+import { usePlanning, setCompleted } from "@/features/planning/store";
+import { dateLabel } from "@/domain/dates";
+export default function VisionView() {
+  const { data, goals, openEditor, commit, today } = usePlanning();
   return (
     <>
       <section className="vision-editorial">
@@ -15,11 +17,10 @@ export default function VisionView({ demo }: { demo: () => void }) {
             And room to <em>just be.</em>
           </h2>
           <p>
-            Work that feels like me. A healthy mind.
-            <br />
-            People I love. Time to stay curious.
+            {data.preferences.vision ||
+              "Make room for what you want your life to hold. Edit your vision in Your space."}
           </p>
-          <span className="sample-caption">Alex’s sample vision</span>
+          <span className="sample-caption">Your vision</span>
         </div>
         <figure>
           <img
@@ -33,9 +34,18 @@ export default function VisionView({ demo }: { demo: () => void }) {
         className="vision-section-heading"
         title="What I’m growing toward"
         accessory={
-          <span className="quiet-label">Three meaningful directions</span>
+          <span className="quiet-label">
+            {goals.length} meaningful{" "}
+            {goals.length === 1 ? "direction" : "directions"}
+          </span>
         }
       />
+      {!goals.length && (
+        <p className="empty-state">
+          Give a future aspiration a place to grow. Create a goal, then add
+          small milestones.
+        </p>
+      )}
       <div className="vision-directions">
         {goals.map((goal, i) => (
           <article className="vision-direction" key={goal.id}>
@@ -45,8 +55,81 @@ export default function VisionView({ demo }: { demo: () => void }) {
                 <span className="category-dot" />
                 {goal.category}
               </span>
-              <h2>{goal.title}</h2>
+              <h2>
+                <button
+                  className="inline-title"
+                  onClick={() => openEditor("goal", goal.id)}
+                >
+                  {goal.title}
+                </button>
+              </h2>
               <p>{goal.detail}</p>
+              <p className="goal-meta">
+                {goal.status}
+                {goal.targetDate
+                  ? ` · Target ${dateLabel(goal.targetDate)}`
+                  : ""}
+              </p>
+              <details className="goal-milestones">
+                <summary>Milestones & linked tasks</summary>
+                {goal.milestones.map((m) => (
+                  <div key={m.id}>
+                    <input
+                      type="checkbox"
+                      aria-label={`Complete milestone ${m.title}`}
+                      checked={m.status === "completed"}
+                      onChange={() =>
+                        commit((d) => {
+                          const ms = d.milestones.find((x) => x.id === m.id)!;
+                          ms.status =
+                            ms.status === "completed" ? "open" : "completed";
+                          ms.updatedAt = new Date().toISOString();
+                          setCompleted(
+                            d,
+                            { type: "milestone", id: m.id },
+                            ms.status === "completed",
+                            today,
+                          );
+                        }, "Milestone updated")
+                      }
+                    />
+                    <button
+                      className="text-link"
+                      onClick={() => openEditor("milestone", m.id)}
+                    >
+                      {m.title}
+                      {m.targetDate ? ` · ${dateLabel(m.targetDate)}` : ""}
+                    </button>
+                  </div>
+                ))}
+                <button
+                  className="text-link"
+                  onClick={() =>
+                    openEditor("milestone", undefined, undefined, goal.id)
+                  }
+                >
+                  Add milestone
+                </button>
+                {data.tasks
+                  .filter((t) => t.goalId === goal.id)
+                  .map((t) => (
+                    <button
+                      className="text-link linked-task"
+                      key={t.id}
+                      onClick={() => openEditor("task", t.id)}
+                    >
+                      {t.title} · {t.status}
+                    </button>
+                  ))}
+                <button
+                  className="text-link"
+                  onClick={() =>
+                    openEditor("task", undefined, undefined, goal.id)
+                  }
+                >
+                  Add linked task
+                </button>
+              </details>
             </div>
             <div className={`direction-progress tone-${goal.color}`}>
               <div>
@@ -55,10 +138,10 @@ export default function VisionView({ demo }: { demo: () => void }) {
               </div>
               <ProgressBar
                 value={goal.progress}
-                label={`${goal.title}: sample milestone progress`}
+                label={`${goal.title}: progress`}
               />
               <span className="next-step-label">Next small step</span>
-              <button onClick={demo}>
+              <button onClick={() => openEditor("goal", goal.id)}>
                 {goal.milestone}
                 <ArrowUpRight size={15} />
               </button>

@@ -11,21 +11,29 @@ import type { View } from "@/components/navigation";
 import SanaMark from "@/components/sana-mark";
 import PreviewCompletion from "@/components/ui/preview-completion";
 import SectionHeader from "@/components/ui/section-header";
-import {
-  categoryFor,
-  todayTasks,
-  todayPriorities,
-  todayUpcomingItems,
-  todayHabits,
-  timeLabel,
-} from "@/domain/sample";
+import { usePlanning } from "@/features/planning/store";
+import { dateLabel } from "@/domain/dates";
 export default function TodayView({
-  demo,
   navigate,
 }: {
-  demo: () => void;
   navigate: (view: View) => void;
 }) {
+  const {
+    data,
+    categoryFor,
+    todayTasks,
+    todayPriorities,
+    todayUpcomingItems,
+    todayHabits,
+    timeLabel,
+    toggleTask,
+    toggleHabit,
+    openEditor,
+    today,
+  } = usePlanning();
+  const deadlines = data.tasks
+    .filter((t) => t.status !== "completed" && t.dueDate && t.dueDate <= today)
+    .sort((a, b) => a.dueDate!.localeCompare(b.dueDate!));
   return (
     <>
       <section className="today-intention" aria-label="Daily intention">
@@ -35,11 +43,22 @@ export default function TodayView({
       <div className="today-layout">
         <div className="today-focus">
           <SectionHeader
-            title="Three things, thoughtfully chosen."
+            title="What matters today."
             eyebrow="YOUR PRIORITIES"
-            accessory={<span className="quiet-label">01 / 03 complete</span>}
+            accessory={
+              <span className="quiet-label">
+                {todayTasks.filter((t) => t.status === "completed").length} /{" "}
+                {todayTasks.length} complete
+              </span>
+            }
           />
           <div className="priorities-list">
+            {!todayPriorities.length && (
+              <p className="empty-state">
+                No tasks planned for today. You can leave it open, or add
+                something that matters.
+              </p>
+            )}
             {todayPriorities.map((task, i) => {
               const category = categoryFor(task.categoryId);
               return (
@@ -50,18 +69,29 @@ export default function TodayView({
                   <span className="priority-index">0{i + 1}</span>
                   <PreviewCompletion
                     completed={task.status === "completed"}
-                    label={`${task.status === "completed" ? "Completed" : "Preview completion for"} ${task.title}`}
-                    onPreview={demo}
+                    label={`${task.status === "completed" ? "Completed" : "Complete"} ${task.title}`}
+                    onPreview={() => toggleTask(task.id)}
                   />
                   <div className="priority-copy">
-                    <h3>{task.title}</h3>
+                    <h3>
+                      <button
+                        className="inline-title"
+                        onClick={() => openEditor("task", task.id)}
+                      >
+                        {task.title}
+                      </button>
+                    </h3>
                     <div>
                       <span className={`category-label tone-${category.tone}`}>
                         <span className="category-dot" />
                         {category.name}
                       </span>
                       <span className="detail-dot">·</span>
-                      <span>{task.estimatedMinutes} min</span>
+                      <span>
+                        {task.estimatedMinutes
+                          ? `${task.estimatedMinutes} min`
+                          : "Flexible"}
+                      </span>
                       {task.priority === "high" && (
                         <span className="priority-label">
                           <Flag size={12} />
@@ -77,7 +107,7 @@ export default function TodayView({
               );
             })}
           </div>
-          <button className="quiet-add" onClick={demo}>
+          <button className="quiet-add" onClick={() => openEditor("task")}>
             <Plus size={16} />
             Add a little intention
           </button>
@@ -93,7 +123,10 @@ export default function TodayView({
             </summary>
             <div>
               {todayTasks.map((task) => (
-                <button key={task.id} onClick={demo}>
+                <button
+                  key={task.id}
+                  onClick={() => openEditor("task", task.id)}
+                >
                   <span>
                     {task.status === "completed" ? (
                       <Check size={15} />
@@ -102,11 +135,41 @@ export default function TodayView({
                     )}
                   </span>
                   <strong>{task.title}</strong>
-                  <span>{task.estimatedMinutes} min</span>
+                  <span>
+                    {task.estimatedMinutes
+                      ? `${task.estimatedMinutes} min`
+                      : "Flexible"}
+                  </span>
                 </button>
               ))}
             </div>
           </details>
+          {deadlines.length > 0 && (
+            <details className="today-task-details">
+              <summary>
+                <span>
+                  Deadlines to keep in view{" "}
+                  <small>
+                    {deadlines.length} due or overdue · separate from planned
+                    days
+                  </small>
+                </span>
+                <ChevronDown size={17} />
+              </summary>
+              <div>
+                {deadlines.map((t) => (
+                  <button key={t.id} onClick={() => openEditor("task", t.id)}>
+                    <strong>{t.title}</strong>
+                    <span>
+                      {t.dueDate === today
+                        ? "Due today"
+                        : `Overdue · ${dateLabel(t.dueDate!)}`}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </details>
+          )}
         </div>
         <aside
           className="today-guidance"
@@ -121,8 +184,8 @@ export default function TodayView({
               </div>
             </div>
             <p>
-              Your portfolio deserves a little focus this morning. After that,
-              let the day have some breathing room.
+              A clear plan can leave room for the rest of your life. This is a
+              sample note, not a recommendation based on your plans.
             </p>
             <button className="text-link" onClick={() => navigate("Sana")}>
               Make room to think <ArrowUpRight size={16} />
@@ -138,6 +201,9 @@ export default function TodayView({
                 </button>
               }
             />
+            {!todayUpcomingItems.length && (
+              <p className="empty-state">No more timed plans today.</p>
+            )}
             {todayUpcomingItems.map((item) => (
               <div className="today-appointment" key={item.id}>
                 <time>
@@ -147,7 +213,14 @@ export default function TodayView({
                   </span>
                 </time>
                 <div>
-                  <h3>{item.title}</h3>
+                  <h3>
+                    <button
+                      className="inline-title"
+                      onClick={() => openEditor(item.kind, item.id)}
+                    >
+                      {item.title}
+                    </button>
+                  </h3>
                   <p>
                     <span
                       className={`category-label tone-${item.category.tone}`}
@@ -185,8 +258,8 @@ export default function TodayView({
               <span>{h.name}</span>
               <PreviewCompletion
                 completed={h.done}
-                label={`${h.name}: ${h.done ? "sample complete" : "sample incomplete"}`}
-                onPreview={demo}
+                label={`${h.name}: ${h.done ? "completed" : "not completed"}`}
+                onPreview={() => toggleHabit(h.id, today)}
               />
             </div>
           ))}

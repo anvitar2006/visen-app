@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { planningItems } from "../src/domain/sample";
+import { seed, stored } from "./helpers/planning";
+test.beforeEach(async ({ page }) => {
+  await seed(page);
+});
 const modes = ["Calendar", "List", "Board", "Timeline"];
 const expected = planningItems
   .map((item) => ({
@@ -10,7 +14,7 @@ const expected = planningItems
     date: item.date,
   }))
   .sort((a, b) => a.id.localeCompare(b.id));
-test("all four previews preserve the same task and commitment identities", async ({
+test("all four views preserve the same task and commitment identities", async ({
   page,
 }) => {
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" });
@@ -150,32 +154,44 @@ for (const viewport of [
     }
   });
 }
-test("Today reveals supporting plans without changing sample data", async ({
+test("Today reveals supporting plans and records a habit completion", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 834, height: 1194 });
   await page.goto("/");
   await expect(
-    page.getByText("Write a few lines", { exact: true }),
+    page
+      .locator(".today-task-details")
+      .getByText("Write a few lines", { exact: true }),
   ).not.toBeVisible();
   await page.getByText("All of today’s tasks", { exact: false }).click();
   await expect(
-    page.getByText("Write a few lines", { exact: true }),
+    page
+      .locator(".today-task-details")
+      .getByText("Write a few lines", { exact: true }),
   ).toBeVisible();
   await page.getByText("Your small rituals", { exact: true }).click();
   await expect(
     page.getByRole("button", {
-      name: "Read a little: sample complete",
+      name: "Read a little: completed",
       exact: true,
     }),
   ).toBeVisible();
   await page
     .getByRole("button", {
-      name: "Read a little: sample complete",
+      name: "Read a little: completed",
       exact: true,
     })
     .click();
-  await expect(page.getByRole("status")).toContainText(
-    "No data has been changed",
-  );
+  await expect(
+    page.getByRole("button", {
+      name: "Read a little: not completed",
+      exact: true,
+    }),
+  ).toBeVisible();
+  expect(
+    (await stored(page)).events.some(
+      (e) => e.kind === "retracted" && e.subject.id === "habit-reading",
+    ),
+  ).toBe(true);
 });

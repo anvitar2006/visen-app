@@ -3,6 +3,10 @@ import AxeBuilder from "@axe-core/playwright";
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "light" });
 });
+import { seed } from "./helpers/planning";
+test.beforeEach(async ({ page }) => {
+  await seed(page);
+});
 const views = ["Today", "Week", "My Vision", "Habits", "Sana"];
 test("all views remain accessible in both themes on iPad landscape", async ({
   page,
@@ -73,7 +77,7 @@ test("portrait, mobile, theme persistence and honest preview actions", async ({
   await page
     .getByRole("button", { name: "Help me find my focus today" })
     .click();
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.locator(".sana-letter-reply")).toContainText(
     "Nothing will change without your approval",
   );
   await page
@@ -81,9 +85,13 @@ test("portrait, mobile, theme persistence and honest preview actions", async ({
     .click();
   await page.getByRole("button", { name: "Today", exact: true }).click();
   await page.getByRole("button", { name: "Add a task", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText(
-    "No data has been changed",
-  );
+  await expect(
+    page.getByRole("dialog", { name: "New task", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Add a task", exact: true }),
+  ).toBeFocused();
   await page
     .getByRole("button", { name: "Open navigation", exact: true })
     .click();
@@ -110,7 +118,9 @@ test("mobile navigation traps focus, closes with Escape, and follows device them
   await expect(
     page.getByRole("button", { name: "Close navigation", exact: true }),
   ).toBeFocused();
-  await page.getByRole("button", { name: "Light mode" }).focus();
+  await page
+    .getByRole("button", { name: "Your space and data settings" })
+    .focus();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "visen", exact: true }),
