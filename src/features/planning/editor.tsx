@@ -375,8 +375,8 @@ function EditorDialog({ editor }: { editor: Editor }) {
     content = (
       <>
         <p className="editor-intro">
-          Plans stay in this browser. There are no accounts or cloud sync.
-          Export a copy regularly; clearing browser data removes local plans.
+          Saved in this browser only. No cloud sync. Export a backup before
+          clearing browser data.
         </p>
         <div className="form-grid">
           {field("name", "Your name", "text", { maxLength: 80 })}
@@ -390,9 +390,8 @@ function EditorDialog({ editor }: { editor: Editor }) {
           })}
         </div>
         <p className="field-help">
-          Use an IANA zone, such as America/New_York or Europe/London. Timed
-          plans keep their instant when you change zones; all-day planned dates
-          and past habit days stay as entered.
+          IANA zone, e.g. America/New_York. Timed plans keep their instant;
+          date-only plans and past habit days stay as entered.
         </p>
         <label className="form-field">
           <span>Your vision</span>
@@ -404,10 +403,7 @@ function EditorDialog({ editor }: { editor: Editor }) {
           />
         </label>
         <section className="settings-section">
-          <h3>Life categories</h3>
-          <p>
-            Choose from five palettes with accessible labels in both themes.
-          </p>
+          <h3>Categories</h3>
           <div className="category-manager">
             {data.categories.map((c) => (
               <button
@@ -479,6 +475,15 @@ function EditorDialog({ editor }: { editor: Editor }) {
                 }}
               />
             </label>
+          </div>
+          <p>Imports replace all plans after confirmation.</p>
+          <details className="editor-details">
+            <summary>Recovery & storage</summary>
+            <p>
+              A recovery copy is kept in this browser before import or reset.
+              Undo covers the last 20 planning edits until refresh. Export a
+              separate backup to keep your data safe.
+            </p>
             <button
               type="button"
               className="text-link"
@@ -496,12 +501,7 @@ function EditorDialog({ editor }: { editor: Editor }) {
             >
               Download recovery copy
             </button>
-          </div>
-          <p>
-            Imports replace your plans after confirmation. A recovery copy of
-            the previous saved document is kept locally. Undo is also available
-            for this session.
-          </p>
+          </details>
           <div className="data-actions">
             <button
               type="button"
@@ -555,11 +555,7 @@ function EditorDialog({ editor }: { editor: Editor }) {
             <details className="editor-details" open={Boolean(editor.id)}>
               <summary>Timing, deadline & goal</summary>
               <div className="form-grid">
-                {field(
-                  "dueDate",
-                  "Deadline (separate from planned day)",
-                  "date",
-                )}
+                {field("dueDate", "Deadline", "date")}
                 {field("estimatedMinutes", "Duration in minutes", "number", {
                   min: 1,
                   max: 1440,
@@ -579,9 +575,8 @@ function EditorDialog({ editor }: { editor: Editor }) {
                     .map((m) => ({ value: m.id, label: m.title })),
                 ])}
               <p className="field-help">
-                Leave the planned day empty for an unscheduled task. A deadline
-                never moves when you reschedule. Clear the start time to remove
-                a time block.
+                No planned day means unscheduled. Rescheduling won’t change a
+                deadline. Clear the start time to remove a block.
               </p>
             </details>
           </>
@@ -599,15 +594,14 @@ function EditorDialog({ editor }: { editor: Editor }) {
               })}
             </div>
             <p className="field-help">
-              Overnight plans are supported. During a repeated daylight-saving
-              hour, Visen uses the earlier occurrence.
+              Repeated daylight-saving times use the earlier occurrence.
             </p>
           </>
         )}
         {editor.kind === "goal" && (
           <>
             <label className="form-field">
-              <span>What this means to you</span>
+              <span>Why it matters</span>
               <textarea
                 value={form.description}
                 onChange={(e) => update("description", e.target.value)}
@@ -624,10 +618,14 @@ function EditorDialog({ editor }: { editor: Editor }) {
                 { value: "completed", label: "Completed" },
               ])}
             </div>
-            <p className="field-help">
-              Progress follows completed milestones, or linked tasks when there
-              are no milestones. You can also mark a goal complete yourself.
-            </p>
+            <details className="editor-details">
+              <summary>How progress works</summary>
+              <p className="field-help">
+                Progress follows completed milestones, or linked tasks when
+                there are no milestones. Marking the goal completed sets
+                progress to 100%.
+              </p>
+            </details>
           </>
         )}
         {editor.kind === "milestone" && (
@@ -697,8 +695,8 @@ function EditorDialog({ editor }: { editor: Editor }) {
               ])}
             </div>
             <p className="field-help">
-              One completion per calendar day. Weekly progress recognizes
-              consistency without streaks or penalties.
+              One completion per day. Extra weekdays still count toward your
+              target.
             </p>
           </>
         )}
@@ -715,10 +713,6 @@ function EditorDialog({ editor }: { editor: Editor }) {
               <span className="category-dot" />
               {form.title || "Category preview"}
             </span>
-            <p className="field-help">
-              Categories use both a name and color. Priority is shown
-              separately.
-            </p>
           </>
         )}
       </>
@@ -735,7 +729,6 @@ function EditorDialog({ editor }: { editor: Editor }) {
     >
       <header className="editor-header">
         <div>
-          <span className="eyebrow">VISEN · YOUR PLANS</span>
           <h2 id="editor-title">{title}</h2>
         </div>
         <button

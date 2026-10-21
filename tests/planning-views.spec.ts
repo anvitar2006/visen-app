@@ -164,13 +164,13 @@ test("Today reveals supporting plans and records a habit completion", async ({
       .locator(".today-task-details")
       .getByText("Write a few lines", { exact: true }),
   ).not.toBeVisible();
-  await page.getByText("All of today’s tasks", { exact: false }).click();
+  await page.getByText("All tasks", { exact: false }).click();
   await expect(
     page
       .locator(".today-task-details")
       .getByText("Write a few lines", { exact: true }),
   ).toBeVisible();
-  await page.getByText("Your small rituals", { exact: true }).click();
+  await page.getByText("Daily habits", { exact: true }).click();
   await expect(
     page.getByRole("button", {
       name: "Read a little: completed",

@@ -8,42 +8,25 @@ export default function HabitsView() {
     usePlanning();
   return (
     <>
-      <section className="habit-introduction">
-        <div className="habit-intro-mark">
-          <Leaf size={26} strokeWidth={1} />
-        </div>
-        <div>
-          <p className="eyebrow">CONSISTENCY, WITH KINDNESS</p>
-          <h2>A rhythm you can return to.</h2>
-          <p>
-            Some days will look different. There’s no perfect streak to protect.
-          </p>
-        </div>
-        <span className="habit-week-label">
-          THIS WEEK
-          <br />
-          <strong>
-            {dateLabel(days[0].isoDate)} — {dateLabel(days[6].isoDate)}
-          </strong>
+      <div className="period-navigation habit-period">
+        <span>
+          {dateLabel(days[0].isoDate)} — {dateLabel(days[6].isoDate)}
         </span>
-      </section>
-      <div className="period-navigation">
-        <button className="text-link" onClick={() => shiftWeek(-1)}>
-          Previous week
-        </button>
-        <button className="text-link" onClick={() => shiftWeek(1)}>
-          Next week
-        </button>
+        <div className="data-actions">
+          <button className="text-link" onClick={() => shiftWeek(-1)}>
+            Previous week
+          </button>
+          <button className="text-link" onClick={() => shiftWeek(1)}>
+            Next week
+          </button>
+        </div>
       </div>
       {!habits.length && (
-        <p className="empty-state">
-          Choose a small ritual you would like to return to. Create your first
-          habit above.
-        </p>
+        <p className="empty-state">No habits yet. Add one to get started.</p>
       )}
       <div className="habit-table">
         <div className="habit-table-head">
-          <span>YOUR RITUALS</span>
+          <span>HABITS</span>
           <div className="habit-days">
             {days.map((d) => (
               <span key={d.name}>
@@ -52,7 +35,7 @@ export default function HabitsView() {
               </span>
             ))}
           </div>
-          <span>THIS WEEK</span>
+          <span>PROGRESS</span>
         </div>
         {habits.map((habit, i) => (
           <div className="habit-table-row" key={habit.id}>
@@ -101,23 +84,10 @@ export default function HabitsView() {
             </div>
             <span className="habit-total">
               {habit.count}
-              <small>moments</small>
+              <small>days</small>
             </span>
           </div>
         ))}
-      </div>
-      <div className="habit-kindness">
-        <span className="eyebrow">A GENTLE REMINDER</span>
-        <p>
-          A five-minute walk counts.
-          <br />
-          So does starting again.
-        </p>
-        <span>
-          Keep what supports you.
-          <br />
-          Let the rest be flexible.
-        </span>
       </div>
     </>
   );

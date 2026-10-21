@@ -10,40 +10,23 @@ export default function VisionView() {
     <>
       <section className="vision-editorial">
         <div className="vision-letter">
-          <p className="eyebrow">A NOTE TO MY FUTURE SELF</p>
-          <h2>
-            A life with meaning.
-            <br />
-            And room to <em>just be.</em>
-          </h2>
-          <p>
-            {data.preferences.vision ||
-              "Make room for what you want your life to hold. Edit your vision in Your space."}
-          </p>
-          <span className="sample-caption">Your vision</span>
+          <h2>Your vision</h2>
+          {data.preferences.vision && <p>{data.preferences.vision}</p>}
+          <button className="text-link" onClick={() => openEditor("settings")}>
+            {data.preferences.vision ? "Edit vision" : "Add your vision"}
+          </button>
         </div>
         <figure>
           <img
             src="/images/ritual.jpg"
             alt="An open notebook beside a plant, pencil and glasses on a softly lit desk"
           />
-          <figcaption>SPACE FOR THE LIFE YOU’RE CREATING</figcaption>
         </figure>
       </section>
-      <SectionHeader
-        className="vision-section-heading"
-        title="What I’m growing toward"
-        accessory={
-          <span className="quiet-label">
-            {goals.length} meaningful{" "}
-            {goals.length === 1 ? "direction" : "directions"}
-          </span>
-        }
-      />
+      <SectionHeader className="vision-section-heading" title="Goals" />
       {!goals.length && (
         <p className="empty-state">
-          Give a future aspiration a place to grow. Create a goal, then add
-          small milestones.
+          No goals yet. Start with something you want to work toward.
         </p>
       )}
       <div className="vision-directions">
@@ -140,7 +123,7 @@ export default function VisionView() {
                 value={goal.progress}
                 label={`${goal.title}: progress`}
               />
-              <span className="next-step-label">Next small step</span>
+              <span className="next-step-label">Next milestone</span>
               <button onClick={() => openEditor("goal", goal.id)}>
                 {goal.milestone}
                 <ArrowUpRight size={15} />
@@ -149,9 +132,6 @@ export default function VisionView() {
           </article>
         ))}
       </div>
-      <p className="vision-postscript">
-        Your vision is allowed to change. This space grows with you.
-      </p>
     </>
   );
 }

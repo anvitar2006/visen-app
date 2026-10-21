@@ -27,7 +27,7 @@ test("task CRUD, time blocks, independent deadlines, four-view synchronization, 
   await page.getByText("Timing, deadline & goal", { exact: true }).click();
   await page
     .locator("dialog")
-    .getByLabel("Deadline (separate from planned day)", { exact: true })
+    .getByLabel("Deadline", { exact: true })
     .fill("2026-10-25");
   await page
     .locator("dialog")
@@ -236,7 +236,7 @@ test("commitments support overnight times, conflicts, daily and monthly calendar
   await expect(page.locator(".month-calendar>button")).toHaveCount(42);
   await page
     .getByRole("button", {
-      name: "Wednesday, October 21, 1 plans",
+      name: "Wednesday, October 21, 1 plan",
       exact: true,
     })
     .click();
@@ -522,9 +522,7 @@ test("unscheduled tasks remain visible, sorting and category updates use the sam
     .fill("Unscheduled responsibility");
   await page.getByLabel("Planned day", { exact: true }).fill("");
   await page.getByText("Timing, deadline & goal", { exact: true }).click();
-  await page
-    .getByLabel("Deadline (separate from planned day)", { exact: true })
-    .fill("2026-10-22");
+  await page.getByLabel("Deadline", { exact: true }).fill("2026-10-22");
   await save(page, "Create task");
   await nav(page, "Week");
   await expect(page.locator(".unscheduled-plans")).toContainText(

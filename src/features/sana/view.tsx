@@ -10,12 +10,12 @@ const examples = [
       "In this example, your portfolio is the main priority. You could give it 45 minutes before Pilates and leave the afternoon a little more open.",
   },
   {
-    title: "Take a look at my week",
+    title: "Plan my week",
     reply:
       "Thursday has a few fixed commitments in the sample calendar. The application review is flexible, so that’s one thing you could consider moving.",
   },
   {
-    title: "How do my plans connect to my goals?",
+    title: "Connect plans to goals",
     reply:
       "The portfolio work supports Alex’s career goal, while Pilates supports their wellbeing goal. These are examples from the sample profile, not observations about you.",
   },
@@ -29,14 +29,9 @@ export default function SanaView() {
       <header className="sana-byline">
         <SanaMark small />
         <span>Sana</span>
-        <small>AI planning assistant · Scripted preview</small>
+        <small>AI planning assistant</small>
       </header>
       <h1>What’s on your mind?</h1>
-      <p className="sana-invitation">
-        A busy day, a decision, or just figuring out where to start.
-        <br className="sana-desktop-break" /> There’s no need to have it all
-        worked out.
-      </p>
       <form
         className="sana-writing-desk"
         onSubmit={(e) => {
@@ -62,7 +57,6 @@ export default function SanaView() {
           maxLength={500}
         />
         <div>
-          <span>Just a place to start.</span>
           <button aria-label="Preview message" disabled={!draft.trim()}>
             Preview note
             <ArrowRight size={16} />
@@ -70,8 +64,7 @@ export default function SanaView() {
         </div>
       </form>
       <p className="sana-preview-explanation">
-        This preview doesn’t use live AI. Your notes aren’t saved or sent to an
-        AI service.
+        Scripted preview · No live AI. Notes aren’t saved or sent.
       </p>
       {answer && (
         <div className="sana-letter-reply" role="status">
@@ -93,7 +86,7 @@ export default function SanaView() {
         className="sana-starting-points"
         aria-label="Sample conversation starters"
       >
-        <h2>Not sure where to begin?</h2>
+        <h2 className="sr-only">Sample prompts</h2>
         <ul>
           {examples.map((example) => (
             <li key={example.title}>
@@ -111,10 +104,10 @@ export default function SanaView() {
       </section>
       <details className="sana-sample-day">
         <summary>
-          View the sample day
+          Sample context
           <ChevronDown size={15} />
         </summary>
-        <p>These plans belong to the fictional sample profile.</p>
+        <p>Fictional plans · October 20, 2026 · America/New_York</p>
         {todayPriorities.slice(0, 2).map((task) => (
           <div key={task.id}>
             <span>

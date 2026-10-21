@@ -12,7 +12,6 @@ import {
   Route,
   Plus,
 } from "lucide-react";
-import type { View } from "@/components/navigation";
 import { usePlanning, type PlanningItem } from "@/features/planning/store";
 import { dateLabel, addDays, localDate, zonedInstant } from "@/domain/dates";
 const ItemsContext = createContext<PlanningItem[]>([]);
@@ -183,6 +182,9 @@ function WeekCalendar({
                     onClick={() => demo(item)}
                     className={`calendar-entry ${item.kind === "commitment" ? "timed-commitment" : ""} ${item.status === "completed" ? "is-complete" : ""}`}
                   >
+                    {item.kind === "commitment" && (
+                      <span className="sr-only">Commitment</span>
+                    )}
                     <span className="entry-time">
                       {item.start ? (
                         item.detail
@@ -221,11 +223,6 @@ function WeekCalendar({
           );
         })}
       </div>
-      <p className="planning-footnote">
-        <span className="commitment-key" />
-        Timed commitments have a side marker. Flexible tasks leave room between
-        plans.
-      </p>
     </>
   );
 }
@@ -256,7 +253,6 @@ function PlanList({ demo }: { demo: (item: PlanningItem) => void }) {
   return (
     <div className="planning-list">
       <div className="list-toolbar">
-        <p>Everything has a place. Take it one thing at a time.</p>
         <label>
           Group by
           <select
@@ -313,9 +309,6 @@ function PlanBoard({ demo }: { demo: (item: PlanningItem) => void }) {
   const [lane, setLane] = useState("open");
   return (
     <>
-      <p className="board-intro">
-        A little perspective on what’s ahead, what’s underway, and what’s done.
-      </p>
       <div className="board-lane-selector" aria-label="Choose workflow column">
         {statuses.map((s) => (
           <button
@@ -364,11 +357,6 @@ function PlanBoard({ demo }: { demo: (item: PlanningItem) => void }) {
                     </span>
                     <DeadlineLabel item={item} />
                     <Priority item={item} />
-                    {item.status === "completed" && (
-                      <span className="completed-note">
-                        <Check size={13} />A step taken
-                      </span>
-                    )}
                   </button>
                 ))}
             </div>
@@ -376,10 +364,7 @@ function PlanBoard({ demo }: { demo: (item: PlanningItem) => void }) {
         ))}
       </div>
       <section className="board-commitments">
-        <h3>
-          Already on the calendar{" "}
-          <span>Commitments keep their scheduled times.</span>
-        </h3>
+        <h3>Commitments</h3>
         {planningItems
           .filter((item) => item.kind === "commitment")
           .map((item) => (
@@ -409,13 +394,6 @@ function PlanTimeline({ demo }: { demo: (item: PlanningItem) => void }) {
   const planningItems = useItems();
   return (
     <div className="timeline-preview">
-      <div className="timeline-introduction">
-        <p className="eyebrow">THE EVERYDAY, CONNECTED</p>
-        <h2>Small steps. A longer view.</h2>
-        <p>
-          See this week’s plans alongside the milestones they’re moving toward.
-        </p>
-      </div>
       <div className="timeline-layout">
         <div className="timeline-rail">
           {days.map((day) => (
@@ -459,8 +437,7 @@ function PlanTimeline({ demo }: { demo: (item: PlanningItem) => void }) {
           ))}
         </div>
         <aside className="milestone-horizon">
-          <p className="eyebrow">ON THE HORIZON</p>
-          <h3>What this is leading to</h3>
+          <h3>Milestones</h3>
           {milestones
             .filter((m) => m.targetDate && m.status !== "completed")
             .map((m) => (
@@ -473,17 +450,12 @@ function PlanTimeline({ demo }: { demo: (item: PlanningItem) => void }) {
                 <ArrowUpRight size={15} />
               </button>
             ))}
-          <p>Your target dates can change. Your pace is personal.</p>
         </aside>
       </div>
     </div>
   );
 }
-export default function WeekView({
-  navigate,
-}: {
-  navigate: (view: View) => void;
-}) {
+export default function WeekView() {
   const {
     data,
     planningItems,
@@ -554,9 +526,7 @@ export default function WeekView({
     <>
       <div className="planning-toolbar">
         <div className="planning-period">
-          <span className="eyebrow">
-            {mode === "Calendar" ? range.toUpperCase() : "YOUR PLANS"}
-          </span>
+          <span className="planning-zone">{data.preferences.timeZone}</span>
           <strong>
             {mode === "Calendar" && range === "day"
               ? dateLabel(anchor, {
@@ -604,14 +574,6 @@ export default function WeekView({
             </button>
           ))}
         </div>
-      </div>
-      <div className="planning-view-description">
-        <p>
-          <span className="intention-dot" />
-          This week’s intention:{" "}
-          <strong>Make progress. Protect my peace.</strong>
-        </p>
-        <span className="preview-tag">{data.preferences.timeZone}</span>
       </div>
       <div className="planning-search">
         <label>
@@ -762,40 +724,33 @@ export default function WeekView({
             <PlanTimeline demo={demo} />
           )}
         </section>
-        {(mode === "Calendar" || mode === "Timeline") && (
-          <section className="unscheduled-plans">
-            <h3>Without a planned day</h3>
-            {filtered
-              .filter((p) => !p.date)
-              .map((item) => (
-                <button
-                  className="text-link"
-                  key={item.id}
-                  data-planning-id={item.id}
-                  onClick={() => demo(item)}
-                >
-                  {item.title}
-                  {item.kind === "task" && item.record.dueDate
-                    ? ` · Due ${dateLabel(item.record.dueDate)}`
-                    : ""}
-                </button>
-              ))}
-            {!filtered.some((p) => !p.date) && <p>No unscheduled tasks.</p>}
-          </section>
-        )}
+        {(mode === "Calendar" || mode === "Timeline") &&
+          filtered.some((p) => !p.date) && (
+            <section className="unscheduled-plans">
+              <h3>Unscheduled</h3>
+              {filtered
+                .filter((p) => !p.date)
+                .map((item) => (
+                  <button
+                    className="text-link"
+                    key={item.id}
+                    data-planning-id={item.id}
+                    onClick={() => demo(item)}
+                  >
+                    {item.title}
+                    {item.kind === "task" && item.record.dueDate
+                      ? ` · Due ${dateLabel(item.record.dueDate)}`
+                      : ""}
+                  </button>
+                ))}
+            </section>
+          )}
         {!filtered.length && (
           <p className="empty-state">
             No plans match. Try another filter, or add a plan.
           </p>
         )}
       </ItemsContext.Provider>
-      <div className="planning-endnote">
-        <p>You can leave a little room for the unexpected.</p>
-        <button className="text-link" onClick={() => navigate("Sana")}>
-          Think it through with Sana
-          <ArrowUpRight size={16} />
-        </button>
-      </div>
     </>
   );
 }
@@ -815,10 +770,12 @@ function MonthCalendar({
   const start = addDays(first, -(weekday === 0 ? 6 : weekday - 1));
   return (
     <>
-      <p className="field-help">
-        Choose a day to see all its plans. Counts include overnight commitments.
-      </p>
       <div className="month-calendar">
+        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+          <span className="month-weekday" key={day} aria-hidden="true">
+            {day}
+          </span>
+        ))}
         {Array.from({ length: 42 }, (_, i) => {
           const date = addDays(start, i);
           const plans = items.filter((p) =>
@@ -828,12 +785,15 @@ function MonthCalendar({
             <button
               key={date}
               className={`${date === today ? "month-today" : ""} ${date.slice(0, 7) !== anchor.slice(0, 7) ? "outside-month" : ""}`}
-              aria-label={`${dateLabel(date, { weekday: "long", month: "long", day: "numeric" })}, ${plans.length} plans`}
+              aria-label={`${dateLabel(date, { weekday: "long", month: "long", day: "numeric" })}, ${plans.length} ${plans.length === 1 ? "plan" : "plans"}`}
               onClick={() => choose(date)}
             >
-              <span>{dateLabel(date, { weekday: "short" })}</span>
               <strong>{Number(date.slice(8))}</strong>
-              <small>{plans.length ? `${plans.length} plans` : "Open"}</small>
+              <small>
+                {plans.length
+                  ? `${plans.length} ${plans.length === 1 ? "plan" : "plans"}`
+                  : "Open"}
+              </small>
               {plans.slice(0, 2).map((p) => (
                 <span
                   className={`month-plan tone-${p.category.tone}`}
@@ -856,9 +816,7 @@ function DayCalendar({ date, items }: { date: string; items: PlanningItem[] }) {
   return (
     <section className="day-calendar">
       <header>
-        <h2>
-          {dateLabel(date, { weekday: "long", month: "long", day: "numeric" })}
-        </h2>
+        <h2 className="sr-only">Daily agenda</h2>
         <p className="busy-summary">
           {busySummary(items, date, data.preferences.timeZone)}
         </p>

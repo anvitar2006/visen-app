@@ -224,7 +224,7 @@ em {
   font-size: 10px;
   letter-spacing: 1.65px;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.7;
 }
 .sidebar-sana > .eyebrow {
@@ -4537,4 +4537,114 @@ details[open] > summary .disclosure-action svg {
   .planning-list-row > .category-label {
     max-width: 100%;
   }
+}
+
+/* Quiet hierarchy: medium emphasis is deliberate; never synthesize bold serif faces. */
+body {
+  font-synthesis: none;
+}
+strong,
+b {
+  font-weight: 500;
+}
+.current-page {
+  font-weight: 400;
+  color: var(--ink);
+}
+.profile strong,
+.direction-progress strong,
+.day-availability strong {
+  font-weight: 400;
+}
+.habit-day-label {
+  font-weight: 400;
+}
+.planning-period {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+.planning-period strong {
+  order: 0;
+  margin: 0;
+}
+.planning-zone {
+  order: 1;
+  font-size: 11px;
+  color: var(--muted);
+}
+.list-toolbar {
+  justify-content: flex-end;
+}
+.sana-note > p {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.8;
+  margin: 16px 0;
+  letter-spacing: 0;
+}
+.sana-note-heading div > span {
+  letter-spacing: 0.3px;
+  font-size: 11px;
+}
+.sana-writing-desk > div {
+  justify-content: flex-end;
+}
+.sana-studio h1 {
+  margin-bottom: 28px;
+}
+.sana-starting-points {
+  margin-top: 26px;
+  padding-top: 18px;
+}
+.vision-letter h2 {
+  font-size: 28px;
+  margin: 0 0 20px;
+}
+.vision-letter .text-link {
+  margin-top: 12px;
+}
+.vision-section-heading {
+  margin-top: 32px;
+}
+.habit-period {
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  margin-top: 0;
+}
+.habit-period > span {
+  font-family: var(--serif);
+  font-size: 24px;
+}
+.rituals-disclosure > summary {
+  padding-block: 22px;
+}
+.editor-header h2 {
+  margin-top: 0;
+}
+.editor-details > p {
+  margin-top: 12px;
+}
+@media (max-width: 760px) {
+  .vision-letter h2 {
+    font-size: 26px;
+  }
+  .habit-period > span {
+    font-size: 22px;
+  }
+  .sana-note > p {
+    font-size: 14px;
+  }
+  .planning-period {
+    align-items: flex-start;
+  }
+}
+
+.month-weekday {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 9px 6px;
+  text-align: left;
 }

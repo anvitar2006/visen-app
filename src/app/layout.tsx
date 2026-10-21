@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "@fontsource/dm-sans/400.css";
 import "@fontsource/dm-sans/500.css";
-import "@fontsource/dm-sans/600.css";
 import "@fontsource/dm-serif-display/400.css";
 import "@fontsource/dm-serif-display/400-italic.css";
 import "./globals.css";

@@ -150,7 +150,7 @@ test("short landscape iPad keeps navigation controls reachable", async ({
     .boundingBox();
   expect(themeBounds!.y + themeBounds!.height).toBeLessThanOrEqual(768);
   await page.getByRole("button", { name: "Week", exact: true }).click();
-  await expect(page.locator("h1")).toContainText("A week with room");
+  await expect(page.locator("h1")).toContainText("Your plans");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

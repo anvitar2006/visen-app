@@ -26,39 +26,26 @@ import {
 import SanaMark from "@/components/sana-mark";
 import PageHeading from "@/components/ui/page-heading";
 const headings = {
-  Today: {
-    eyebrow: "TUESDAY, OCTOBER 20 · SAMPLE DAY",
-    title: "Good morning, Alex.",
-    description: "",
-    action: "Add a task",
-  },
+  Today: { eyebrow: "", title: "Today", description: "", action: "Add a task" },
   Week: {
-    eyebrow: "YOUR WEEK, WITH INTENTION",
-    title: "A week with room to breathe.",
-    description: "The plans that matter, with space for life in between.",
+    eyebrow: "",
+    title: "Your plans",
+    description: "",
     action: "Add a plan",
   },
   "My Vision": {
-    eyebrow: "THE BIGGER PICTURE",
-    title: "Become who you envision.",
-    description:
-      "Let the life you want to create bring meaning to the everyday.",
+    eyebrow: "",
+    title: "My Vision",
+    description: "",
     action: "New goal",
   },
   Habits: {
-    eyebrow: "THE THINGS YOU COME BACK TO",
-    title: "Small rituals. A steadier rhythm.",
-    description:
-      "Simple things that help you feel a little more like yourself.",
+    eyebrow: "",
+    title: "Habits & routines",
+    description: "",
     action: "New habit",
   },
-  Sana: {
-    eyebrow: "THOUGHTFUL GUIDANCE, YOUR DECISIONS",
-    title: "A little clarity, with Sana.",
-    description:
-      "A quiet place to sort through your plans and find a little perspective.",
-    action: null,
-  },
+  Sana: { eyebrow: "", title: "Sana", description: "", action: null },
 } satisfies Record<
   View,
   { eyebrow: string; title: string; description: string; action: string | null }
@@ -150,7 +137,7 @@ function VisenApp() {
       (d) => {
         d.preferences.theme = dark ? "light" : "dark";
       },
-      "Appearance saved",
+      "",
       false,
       false,
     );
@@ -159,6 +146,7 @@ function VisenApp() {
     setView(next);
     setMenu(false);
     setNotice(false);
+    planning.setMessage("");
   }
   const demo = () => setNotice(true);
   const addPlan = () =>
@@ -202,7 +190,6 @@ function VisenApp() {
           ))}
         </nav>
         <div className="sidebar-sana">
-          <span className="eyebrow">A LITTLE GUIDANCE</span>
           <NavigationButton
             view="Sana"
             active={view === "Sana"}
@@ -213,12 +200,6 @@ function VisenApp() {
           />
         </div>
         <div className="sidebar-bottom">
-          <div className="sidebar-quote">
-            <p>
-              Small steps.
-              <br />A life that feels like you.
-            </p>
-          </div>
           <button className="theme-button" onClick={toggleTheme}>
             {dark ? <Sun size={17} /> : <Moon size={17} />}
             <span>{dark ? "Light mode" : "Dark mode"}</span>
@@ -236,7 +217,7 @@ function VisenApp() {
             </span>
             <div>
               <strong>{data.preferences.name || "Your space"}</strong>
-              <span>Your personal space</span>
+              <span>Settings</span>
             </div>
             <span className="sample-pill">LOCAL</span>
           </button>
@@ -261,14 +242,11 @@ function VisenApp() {
             >
               <Menu size={21} />
             </button>
-            <span>Your space</span>
-            <span className="slash">/</span>
-            <strong>{view}</strong>
+            <span className="current-page">{view}</span>
           </div>
           <div className="topbar-right">
             <span className="demo-label">
-              <span />{" "}
-              {data.sample ? "INCLUDES SAMPLE PLANS" : "SAVED ON THIS DEVICE"}
+              <span /> {data.sample ? "Sample plans" : "Local only"}
             </span>
             <button
               className="icon-button"
@@ -292,7 +270,7 @@ function VisenApp() {
           {view !== "Sana" && (
             <PageHeading
               eyebrow={
-                view === "Today"
+                view === "Today" && ready
                   ? dateLabel(planning.today, {
                       weekday: "long",
                       month: "long",
@@ -378,29 +356,20 @@ function VisenApp() {
             !data.commitments.length &&
             view !== "Sana" && (
               <div className="empty-welcome">
-                <p>
-                  Your space is ready. Start with one plan, or explore fictional
-                  examples.
-                </p>
+                <p>Start with a plan, or explore sample plans.</p>
                 <button
                   className="text-link"
                   onClick={() => openEditor("settings")}
                 >
-                  Profile, sample plans & data
+                  Settings & sample plans
                 </button>
               </div>
             )}
           {ready && view === "Today" && <TodayView navigate={navigate} />}
-          {view === "Week" && <WeekView navigate={navigate} />}
+          {view === "Week" && <WeekView />}
           {view === "My Vision" && <VisionView />}
           {view === "Habits" && <HabitsView />}
           {view === "Sana" && <SanaView />}
-          <footer className="page-footer">
-            <span>
-              VISEN <span className="footer-dot">·</span> A LIFE WITH INTENTION
-            </span>
-            <span>Local planning · No cloud sync</span>
-          </footer>
         </div>
       </main>
       <PlanningEditor />
