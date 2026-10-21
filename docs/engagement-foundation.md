@@ -41,3 +41,7 @@ The fixture test checks unique IDs, goal/milestone links, valid dated event refe
 ## Approved Phase 2 refinement
 
 The founder authorized read-only List, Calendar, Board, and Timeline presentations, plus visual refinements. These use the same task/commitment records and do not add editing, persistence, or future engagement functionality. Sana remains a clearly labeled scripted preview. Future onboarding must ask one question at a time, adapt only to voluntarily supplied context, and obtain explicit approval before saving a profile or changing plans. No current screen claims these capabilities are available.
+
+## Phase 3 update
+
+The founder subsequently authorized functional local planning. Completion controls now write validated local completion/retraction records, and progress is calculated from milestones/tasks and habit days. See [Phase 3](phase-3-review.md) for persistence, relationship integrity, and privacy limits. This supersedes the historical read-only descriptions above for planning behavior only; reflections, rewards, circles, referrals, live AI, and Phase 4 onboarding remain unimplemented.

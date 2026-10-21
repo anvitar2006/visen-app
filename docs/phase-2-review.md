@@ -1,5 +1,7 @@
 # Visen — Phase 2 design review
 
+Historical Phase 2 design record. Current functionality and private preview instructions are in [Phase 3](phase-3-review.md).
+
 Branch: `design/phase-2`. This is a running, read-only sample-data application. The branch is published for review; main is unchanged. No app hosting, Codespace, paid service, account system, database, or AI integration has been created.
 
 ## The refined experience
